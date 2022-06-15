@@ -28,8 +28,10 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import agents.AID;
+import agents.AgentType;
 import chatmanager.ChatManagerRemote;
-import messagemanager.AgentMessage;
+import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
 import util.FileUtils;
@@ -222,10 +224,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
-			AgentMessage message = new AgentMessage();
+			/*AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
 			message.userArgs.put("command", "GET_LOGGEDIN");
 			
+			messageManager.post(message);*/
+			ACLMessage message = new ACLMessage();
+			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+			message.userArgs.put("command", "GET_LOGGEDIN");
 			messageManager.post(message);
 		}
 	}
@@ -250,10 +256,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
-			AgentMessage message = new AgentMessage();
+			/*AgentMessage message = new AgentMessage();
 			message.userArgs.put("receiver", u.getUsername());
 			message.userArgs.put("command", "GET_REGISTERED");
 			
+			messageManager.post(message);*/
+			ACLMessage message = new ACLMessage();
+			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+			message.userArgs.put("command", "GET_REGISTERED");
 			messageManager.post(message);
 		}
 	}

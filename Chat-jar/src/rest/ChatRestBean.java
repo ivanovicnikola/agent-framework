@@ -6,8 +6,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
 import agentmanager.AgentManagerRemote;
+import agents.AID;
+import agents.AgentType;
 import chatmanager.ChatManagerRemote;
-import messagemanager.AgentMessage;
+import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
 import util.JNDILookup;
@@ -35,10 +37,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
-			AgentMessage message = new AgentMessage();
-			message.userArgs.put("receiver", u.getUsername());
+			ACLMessage message = new ACLMessage();
+			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			message.userArgs.put("command", "GET_REGISTERED");
-			
 			messageManager.post(message);
 		}
 		return Response.status(Response.Status.CREATED).entity(user).build();
@@ -49,15 +50,16 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		agentManager.startAgent(JNDILookup.UserAgentLookup, user.getUsername());
+		user = chatManager.getByUsername(user.getUsername());
+		AID agentId = new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent"));
+		agentManager.startAgent(JNDILookup.UserAgentLookup, agentId);
 		for(User u : chatManager.loggedInUsers()) {
 			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
-			AgentMessage message = new AgentMessage();
-			message.userArgs.put("receiver", u.getUsername());
+			ACLMessage message = new ACLMessage();
+			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			message.userArgs.put("command", "GET_LOGGEDIN");
-			
 			messageManager.post(message);
 		}
 		return Response.status(Response.Status.OK).entity(user).build();
@@ -65,27 +67,28 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public void getloggedInUsers(String username) {
-		AgentMessage message = new AgentMessage();
-		message.userArgs.put("receiver", username);
+		User user = chatManager.getByUsername(username);
+		ACLMessage message = new ACLMessage();
+		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
 		message.userArgs.put("command", "GET_LOGGEDIN");
-		
 		messageManager.post(message);
 	}
 
 	@Override
 	public Response logout(String username) {
+		User user = chatManager.getByUsername(username);
+		AID agentId = new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent"));
 		if(!chatManager.logout(username)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		agentManager.stopAgent(username);
+		agentManager.stopAgent(agentId);
 		for(User u : chatManager.loggedInUsers()) {
 			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 				continue;
 			}
-			AgentMessage message = new AgentMessage();
-			message.userArgs.put("receiver", u.getUsername());
+			ACLMessage message = new ACLMessage();
+			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			message.userArgs.put("command", "GET_LOGGEDIN");
-			
 			messageManager.post(message);
 		}
 		return Response.status(Response.Status.OK).build();
@@ -93,10 +96,10 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 
 	@Override
 	public void getRegisteredUsers(String username) {
-		AgentMessage message = new AgentMessage();
-		message.userArgs.put("receiver", username);
+		User user = chatManager.getByUsername(username);
+		ACLMessage message = new ACLMessage();
+		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
 		message.userArgs.put("command", "GET_REGISTERED");
-		
 		messageManager.post(message);
 	}
 	

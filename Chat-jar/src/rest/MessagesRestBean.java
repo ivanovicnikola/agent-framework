@@ -8,8 +8,10 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import agents.AID;
+import agents.AgentType;
 import chatmanager.ChatManagerRemote;
-import messagemanager.AgentMessage;
+import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.Message;
 import models.User;
@@ -35,13 +37,11 @@ public class MessagesRestBean implements MessagesRest {
 	public void messageUser(Message message) {
 		User user = chatManager.getByUsername(message.getReceiver().getUsername());
 		if(user.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
-			AgentMessage amsg = new AgentMessage();
-			amsg.userArgs.put("command", "MESSAGE");
-			amsg.userArgs.put("receiver", message.getReceiver().getUsername());
-			amsg.userArgs.put("sender", message.getSender().getUsername());
-			amsg.userArgs.put("subject", message.getSubject());
-			amsg.userArgs.put("content", message.getContent());
-			messageManager.post(amsg);
+			ACLMessage aclMessage = new ACLMessage();
+			aclMessage.userArgs.put("command", "MESSAGE");
+			aclMessage.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+			aclMessage.contentObj = message;
+			messageManager.post(aclMessage);
 		}
 		else {
 			System.out.println("Sending message to node: " + user.getHost().getAlias());
@@ -55,10 +55,11 @@ public class MessagesRestBean implements MessagesRest {
 
 	@Override
 	public void getUserMessages(String username) {
-		AgentMessage amsg = new AgentMessage();
-		amsg.userArgs.put("command", "GET_MESSAGES");
-		amsg.userArgs.put("receiver", username);
-		messageManager.post(amsg);
+		User user = chatManager.getByUsername(username);
+		ACLMessage aclMessage = new ACLMessage();
+		aclMessage.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		aclMessage.userArgs.put("command", "GET_MESSAGES");
+		messageManager.post(aclMessage);
 	}
 
 	private String getNodeAlias() {		

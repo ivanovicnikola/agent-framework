@@ -2,11 +2,12 @@ package agentmanager;
 
 import javax.ejb.Remote;
 
+import agents.AID;
 import agents.Agent;
 
 @Remote
 public interface AgentManagerRemote {
-	public String startAgent(String name, String agentId);
-	public Agent getAgentById(String agentId);
-	public void stopAgent(String agentId);
+	public AID startAgent(String name, AID agentId);
+	public Agent getAgentById(AID agentId);
+	public void stopAgent(AID agentId);
 }

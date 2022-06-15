@@ -1,3 +1,6 @@
 /agents/
-/util/
+/messagemanager/
+/models/
+/rest/
 /connectionmanager/
+/agentmanager/

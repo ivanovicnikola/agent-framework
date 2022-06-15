@@ -14,7 +14,7 @@ import javax.ejb.Singleton;
 @Remote(CachedAgentsRemote.class)
 public class CachedAgents implements CachedAgentsRemote{
 
-	HashMap<String, Agent> runningAgents;
+	HashMap<AID, Agent> runningAgents;
 
 	/**
 	 * Default constructor.
@@ -25,13 +25,33 @@ public class CachedAgents implements CachedAgentsRemote{
 	}
 
 	@Override
-	public HashMap<String, Agent> getRunningAgents() {
+	public HashMap<AID, Agent> getRunningAgents() {
 		return runningAgents;
 	}
 
 	@Override
-	public void addRunningAgent(String key, Agent agent) {
+	public void addRunningAgent(AID key, Agent agent) {
 		runningAgents.put(key, agent);
+	}
+
+	@Override
+	public Agent getByAID(AID agentId) {
+		for(Agent agent : runningAgents.values()) {
+			if(agent.getAgentId().equals(agentId)) {
+				return agent;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void deleteByAID(AID agentId) {
+		for(Agent agent : runningAgents.values()) {
+			if(agent.getAgentId().equals(agentId)) {
+				runningAgents.remove(agent.getAgentId());
+				return;
+			}
+		}
 	}
 
 }

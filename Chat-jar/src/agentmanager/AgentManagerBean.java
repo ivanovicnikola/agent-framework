@@ -4,6 +4,7 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import agents.AID;
 import agents.Agent;
 import agents.CachedAgentsRemote;
 import util.JNDILookup;
@@ -23,19 +24,19 @@ public class AgentManagerBean implements AgentManagerRemote {
     }
 
 	@Override
-	public String startAgent(String name, String agentId) {
+	public AID startAgent(String name, AID agentId) {
 		Agent agent = (Agent) JNDILookup.lookUp(name, Agent.class);
 		return agent.init(agentId);
 	}
 
 	@Override
-	public Agent getAgentById(String agentId) {
-		return cachedAgents.getRunningAgents().get(agentId);
+	public Agent getAgentById(AID agentId) {
+		return cachedAgents.getByAID(agentId);
 	}
 
 	@Override
-	public void stopAgent(String agentId) {
-		cachedAgents.getRunningAgents().remove(agentId);
+	public void stopAgent(AID agentId) {
+		cachedAgents.deleteByAID(agentId);
 	}
 
 

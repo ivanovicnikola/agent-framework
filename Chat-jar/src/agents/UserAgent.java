@@ -7,21 +7,14 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.TextMessage;
 
 import chatmanager.ChatManagerRemote;
+import messagemanager.ACLMessage;
 import messagestorage.MessageStorageRemote;
-import models.Host;
+import models.Message;
 import models.User;
 import ws.WSChat;
-/**
- * Sledece nedelje cemo prebaciti poruke koje krajnji korisnik treba da vidi da se 
- * salju preko Web Socketa na front-end (klijentski deo aplikacije)
- * @author Aleksandra
- *
- */
+
 @Stateful
 @Remote(Agent.class)
 public class UserAgent implements Agent {
@@ -30,7 +23,7 @@ public class UserAgent implements Agent {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String agentId;
+	private AID agentId;
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
@@ -46,74 +39,57 @@ public class UserAgent implements Agent {
 	}
 	
 	@Override
-	public void handleMessage(Message message) {
-		TextMessage tmsg = (TextMessage) message;
-
-		String receiver;
-		try {
-			receiver = (String) tmsg.getObjectProperty("receiver");
-			if (agentId.equals(receiver)) {
-				String option = "";
-				String response = "";
-				try {
-					option = (String) tmsg.getObjectProperty("command");
-					switch (option) {
-					case "GET_LOGGEDIN":
-						response = "LOGGEDIN!";
-						List<User> loggedUsers = chatManager.loggedInUsers();
-						for (User u : loggedUsers) {
-							response += u.toString() + "|";
-						}
-
-						break;
-					case "GET_REGISTERED":
-						response = "REGISTERED!";
-						List<User> registeredUsers = chatManager.registeredUsers();
-						for (User u : registeredUsers) {
-							response += u.toString() + "|";
-						}
-
-						break;
-					case "MESSAGE":
-						response = "MESSAGE!";
-						String sender = (String) tmsg.getObjectProperty("sender");
-						String content = (String) tmsg.getObjectProperty("content");
-						String subject = (String) tmsg.getObjectProperty("subject");
-						models.Message msg = new models.Message(new User(receiver, "", new Host()), new User(sender, "", new Host()), LocalDateTime.now(), subject, content);
-						messageStorage.addMessage(msg);
-						response += msg.toString();
-						break;
-					case "GET_MESSAGES":
-						response = "MESSAGES!";
-						for(models.Message m : messageStorage.getAll()) {
-							response += m.toString() + "|";
-						}
-						break;
-					default:
-						response = "ERROR!Option: " + option + " does not exist.";
-						break;
-					}
-					System.out.println(response);
-					ws.onMessage(agentId, response);
-					
-				} catch (JMSException e) {
-					e.printStackTrace();
-				}
+	public void handleMessage(ACLMessage message) {
+		String option = "";
+		String response = "";
+		option = (String) message.userArgs.get("command");
+		switch (option) {
+		case "GET_LOGGEDIN":
+			response = "LOGGEDIN!";
+			List<User> loggedUsers = chatManager.loggedInUsers();
+			for (User u : loggedUsers) {
+				response += u.toString() + "|";
 			}
-		} catch (JMSException e) {
-			e.printStackTrace();
+
+			break;
+		case "GET_REGISTERED":
+			response = "REGISTERED!";
+			List<User> registeredUsers = chatManager.registeredUsers();
+			for (User u : registeredUsers) {
+				response += u.toString() + "|";
+			}
+
+			break;
+		case "MESSAGE":
+			response = "MESSAGE!";
+			models.Message msg = (Message) message.contentObj;
+			msg.setDateCreated(LocalDateTime.now());
+			messageStorage.addMessage(msg);
+			response += msg.toString();
+			break;
+		case "GET_MESSAGES":
+			response = "MESSAGES!";
+			for(models.Message m : messageStorage.getAll()) {
+				response += m.toString() + "|";
+			}
+			break;
+		default:
+			response = "ERROR!Option: " + option + " does not exist.";
+			break;
 		}
+		System.out.println(response);
+		ws.onMessage(agentId.getName(), response);
 	}
 
 	@Override
-	public String init(String agentId) {
+	public AID init(AID agentId) {
 		this.agentId = agentId;
 		cachedAgents.addRunningAgent(agentId, this);
 		return agentId;
 	}
 
 	@Override
-	public String getAgentId() {
+	public AID getAgentId() {
 		return agentId;
 	}
 }

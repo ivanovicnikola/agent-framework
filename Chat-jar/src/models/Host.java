@@ -44,4 +44,10 @@ public class Host implements Serializable {
 		return alias + "," + address;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		Host host = (Host) obj;
+		return host.alias.equals(alias) && host.address.equals(address);
+	}
+
 }
