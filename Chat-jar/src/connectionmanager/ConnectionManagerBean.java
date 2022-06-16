@@ -198,20 +198,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void setLoggedInRemote(List<User> users) {
 		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
+		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				continue;
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			}
-			/*AgentMessage message = new AgentMessage();
-			message.userArgs.put("receiver", u.getUsername());
-			message.userArgs.put("command", "GET_LOGGEDIN");
-			
-			messageManager.post(message);*/
-			ACLMessage message = new ACLMessage();
-			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			message.userArgs.put("command", "GET_LOGGEDIN");
-			messageManager.post(message);
 		}
+		message.userArgs.put("command", "GET_LOGGEDIN");
+		messageManager.post(message);
 	}
 
 	@Override
@@ -230,20 +224,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void setRegisteredRemote(List<User> users) {
 		System.out.println("Number of registered users: " + users.size());
 		chatManager.setRegisteredUsers(users);
+		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				continue;
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			}
-			/*AgentMessage message = new AgentMessage();
-			message.userArgs.put("receiver", u.getUsername());
-			message.userArgs.put("command", "GET_REGISTERED");
-			
-			messageManager.post(message);*/
-			ACLMessage message = new ACLMessage();
-			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			message.userArgs.put("command", "GET_REGISTERED");
-			messageManager.post(message);
 		}
+		message.userArgs.put("command", "GET_REGISTERED");
+		messageManager.post(message);
 	}
 
 }

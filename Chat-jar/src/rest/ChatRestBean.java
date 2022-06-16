@@ -36,15 +36,14 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.register(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
+		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				continue;
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			}
-			ACLMessage message = new ACLMessage();
-			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			message.userArgs.put("command", "GET_REGISTERED");
-			messageManager.post(message);
 		}
+		message.userArgs.put("command", "GET_REGISTERED");
+		messageManager.post(message);
 		return Response.status(Response.Status.CREATED).entity(user).build();
 	}
 
@@ -54,15 +53,14 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		agentsRest.runAgent("UserAgent", user.getUsername());
+		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				continue;
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			}
-			ACLMessage message = new ACLMessage();
-			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			message.userArgs.put("command", "GET_LOGGEDIN");
-			messageManager.post(message);
 		}
+		message.userArgs.put("command", "GET_LOGGEDIN");
+		messageManager.post(message);
 		return Response.status(Response.Status.OK).entity(user).build();
 	}
 
@@ -83,15 +81,14 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		agentsRest.stopAgent(agentId);
+		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				continue;
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
 			}
-			ACLMessage message = new ACLMessage();
-			message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			message.userArgs.put("command", "GET_LOGGEDIN");
-			messageManager.post(message);
 		}
+		message.userArgs.put("command", "GET_LOGGEDIN");
+		messageManager.post(message);
 		return Response.status(Response.Status.OK).build();
 	}
 
