@@ -3,7 +3,6 @@ package connectionmanager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -15,13 +14,6 @@ import javax.ejb.Remote;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.MBeanException;
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
 import javax.ws.rs.Path;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -34,6 +26,7 @@ import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
+import util.AgentCenter;
 import util.FileUtils;
 import ws.WSChat;
 
@@ -59,8 +52,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@PostConstruct
 	private void init() {
-		nodeAddress = getNodeAddress();
-		nodeAlias = getNodeAlias() + ":8080";
+		nodeAddress = AgentCenter.getNodeAddress();
+		nodeAlias = AgentCenter.getNodeAlias();
 		masterAlias = getMasterAlias();
 		System.out.println("MASTER ADDR: " + masterAlias + ", node name: " + nodeAlias + ", node address: " + nodeAddress);
 		if (masterAlias != null && !masterAlias.equals("")) {
@@ -77,21 +70,6 @@ public class ConnectionManagerBean implements ConnectionManager {
 			System.out.println("Master node started");
 		}
 
-	}
-	
-	private String getNodeAddress() {		
-		try {
-			MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-			ObjectName http = new ObjectName("jboss.as:socket-binding-group=standard-sockets,socket-binding=http");
-			return (String) mBeanServer.getAttribute(http, "boundAddress");			
-		} catch (MalformedObjectNameException | InstanceNotFoundException | AttributeNotFoundException | ReflectionException | MBeanException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	private String getNodeAlias() {		
-		return System.getProperty("jboss.node.name");
 	}
 	
 	private String getMasterAlias() {
@@ -221,7 +199,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
 			}
 			/*AgentMessage message = new AgentMessage();
@@ -253,7 +231,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		System.out.println("Number of registered users: " + users.size());
 		chatManager.setRegisteredUsers(users);
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
 			}
 			/*AgentMessage message = new AgentMessage();

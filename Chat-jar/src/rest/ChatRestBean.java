@@ -12,6 +12,7 @@ import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
+import util.AgentCenter;
 import util.JNDILookup;
 
 @Stateless
@@ -34,7 +35,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
 			}
 			ACLMessage message = new ACLMessage();
@@ -54,7 +55,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		AID agentId = new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent"));
 		agentManager.startAgent(JNDILookup.UserAgentLookup, agentId);
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
 			}
 			ACLMessage message = new ACLMessage();
@@ -83,7 +84,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		}
 		agentManager.stopAgent(agentId);
 		for(User u : chatManager.loggedInUsers()) {
-			if(!u.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
+			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
 			}
 			ACLMessage message = new ACLMessage();
@@ -102,8 +103,5 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		message.userArgs.put("command", "GET_REGISTERED");
 		messageManager.post(message);
 	}
-	
-	private String getNodeAlias() {		
-		return System.getProperty("jboss.node.name");
-	}
+
 }

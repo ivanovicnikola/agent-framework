@@ -11,6 +11,8 @@ import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
+import util.AgentCenter;
+import util.JNDILookup;
 
 @Stateless
 @Path("/agents")
@@ -36,6 +38,20 @@ public class AgentsRestBean implements AgentsRest {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
 		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.userArgs.put("command", "GET_RUNNING");
+		messageManager.post(message);
+	}
+
+	@Override
+	public void runAgent(String type, String name) {
+		AID agentId = new AID(name, AgentCenter.getHost(), new AgentType(type));
+		agentManager.startAgent(JNDILookup.UserAgentLookup, agentId);
+		ACLMessage message = new ACLMessage();
+		for(User u : chatManager.loggedInUsers()) {
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+			}	
+		}
 		message.userArgs.put("command", "GET_RUNNING");
 		messageManager.post(message);
 	}
