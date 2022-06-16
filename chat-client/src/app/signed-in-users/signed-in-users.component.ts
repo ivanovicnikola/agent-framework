@@ -10,7 +10,7 @@ import { UserService } from '../service/user.service';
 })
 export class SignedInUsersComponent implements OnInit {
   
-  constructor(public userService: UserService,) { }
+  constructor(public userService: UserService) { }
 
   ngOnInit(): void {
     this.getLoggedUsers();

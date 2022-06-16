@@ -51,6 +51,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
+import { RunningAgentsComponent } from './running-agents/running-agents.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MessagesComponent } from './messages/messages.component';
     SignedInUsersComponent,
     SendMessageComponent,
     MessageAllComponent,
-    MessagesComponent
+    MessagesComponent,
+    RunningAgentsComponent
   ],
   imports: [
     BrowserModule,

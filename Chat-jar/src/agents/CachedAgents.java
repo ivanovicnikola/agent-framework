@@ -1,6 +1,8 @@
 package agents;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
@@ -14,29 +16,29 @@ import javax.ejb.Singleton;
 @Remote(CachedAgentsRemote.class)
 public class CachedAgents implements CachedAgentsRemote{
 
-	HashMap<AID, Agent> runningAgents;
+	List<Agent> runningAgents;
 
 	/**
 	 * Default constructor.
 	 */
 	public CachedAgents() {
 
-		runningAgents = new HashMap<>();
+		runningAgents = new ArrayList<>();
 	}
 
 	@Override
-	public HashMap<AID, Agent> getRunningAgents() {
+	public List<Agent> getRunningAgents() {
 		return runningAgents;
 	}
 
 	@Override
-	public void addRunningAgent(AID key, Agent agent) {
-		runningAgents.put(key, agent);
+	public void addRunningAgent(Agent agent) {
+		runningAgents.add(agent);
 	}
 
 	@Override
 	public Agent getByAID(AID agentId) {
-		for(Agent agent : runningAgents.values()) {
+		for(Agent agent : runningAgents) {
 			if(agent.getAgentId().equals(agentId)) {
 				return agent;
 			}
@@ -46,9 +48,9 @@ public class CachedAgents implements CachedAgentsRemote{
 
 	@Override
 	public void deleteByAID(AID agentId) {
-		for(Agent agent : runningAgents.values()) {
+		for(Agent agent : runningAgents) {
 			if(agent.getAgentId().equals(agentId)) {
-				runningAgents.remove(agent.getAgentId());
+				runningAgents.remove(agent);
 				return;
 			}
 		}

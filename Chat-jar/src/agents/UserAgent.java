@@ -73,6 +73,12 @@ public class UserAgent implements Agent {
 				response += m.toString() + "|";
 			}
 			break;
+		case "GET_RUNNING":
+			response = "RUNNING!";
+			for(Agent agent : cachedAgents.getRunningAgents()) {
+				response += agent.getAgentId().toString() + "|";
+			}
+			break;
 		default:
 			response = "ERROR!Option: " + option + " does not exist.";
 			break;
@@ -84,7 +90,7 @@ public class UserAgent implements Agent {
 	@Override
 	public AID init(AID agentId) {
 		this.agentId = agentId;
-		cachedAgents.addRunningAgent(agentId, this);
+		cachedAgents.addRunningAgent(this);
 		return agentId;
 	}
 

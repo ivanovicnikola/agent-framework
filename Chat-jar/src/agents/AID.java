@@ -55,4 +55,9 @@ public class AID implements Serializable {
 		return agentId.getHost().equals(host) && agentId.getName().equals(name) && agentId.getType().equals(type);
 	}
 
+	@Override
+	public String toString() {
+		return name + "," + host.getAlias() + "," + host.getAddress() + "," + type.getName();
+	}
+
 }

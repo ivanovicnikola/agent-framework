@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AID } from '../model/AID';
 import { Message } from '../model/message';
 import { User } from '../model/user';
+import { AgentService } from './agent.service';
 import { MessageService } from './message.service';
 
 const baseUrl = 'http://localhost:8080/Chat-war/api/users/';
@@ -18,14 +20,14 @@ export class UserService {
   registeredUsers: User[] = [];
   user: User = new User('', '');
 
-  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router, private messageService: MessageService, private agentService: AgentService) { }
 
   signIn(user: User) {
     return this.http.post(baseUrl + 'login', user).subscribe({
       next: (user) => {
         this.user = user as User;
         this.isSignedIn = true;
-        initSocket(this, this.router, this.toastr, this.messageService)
+        initSocket(this, this.router, this.toastr, this.messageService, this.agentService)
         this.router.navigate(['send-message']);
       },
       error: () => (this.toastr.error("Invalid username/password"))
@@ -57,7 +59,7 @@ export class UserService {
   }
 }
 
-function initSocket(userService: UserService, router: Router, toastr: ToastrService, messageService: MessageService) {
+function initSocket(userService: UserService, router: Router, toastr: ToastrService, messageService: MessageService, agentService: AgentService) {
   let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/" + userService.user.username);
   connection.onopen = function() {
     console.log("Socket is open");
@@ -104,6 +106,16 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       let messageData = data[1].split(",");
       messageService.messages.push(new Message(null, new User(messageData[0], ""), new Date(messageData[1]), messageData[2], messageData[3]));
       toastr.info("New message from " + messageData[0]);
+    }
+    else if(data[0] === "RUNNING") {
+      let runningAgents: AID[] = [];
+      data[1].split("|").forEach((agent: string) => {
+        if (agent) {
+            let agentData = agent.split(",");
+            runningAgents.push(new AID(agentData[0], agentData[1], agentData[2], agentData[3]));
+        }
+      });
+      agentService.runningAgents = runningAgents;
     }
     else {
       toastr.info(data[1]);

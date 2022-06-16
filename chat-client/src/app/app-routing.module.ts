@@ -4,6 +4,7 @@ import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RegisteredUsersComponent } from './registered-users/registered-users.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { RunningAgentsComponent } from './running-agents/running-agents.component';
 import { SendMessageComponent } from './send-message/send-message.component';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { SignedInUsersComponent } from './signed-in-users/signed-in-users.component';
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: 'signed-in-users', component: SignedInUsersComponent},
   { path: 'send-message', component: SendMessageComponent},
   { path: 'message-all', component: MessageAllComponent},
-  { path: 'messages', component: MessagesComponent}
+  { path: 'messages', component: MessagesComponent},
+  { path: 'running-agents', component: RunningAgentsComponent}
 ];
 
 @NgModule({
