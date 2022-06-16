@@ -13,7 +13,6 @@ import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
 import util.AgentCenter;
-import util.JNDILookup;
 
 @Stateless
 @LocalBean
@@ -28,6 +27,9 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	
 	@EJB
 	private AgentManagerRemote agentManager;
+	
+	@EJB
+	private AgentsRest agentsRest;
 	
 	@Override
 	public Response register(User user) {
@@ -51,9 +53,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		user = chatManager.getByUsername(user.getUsername());
-		AID agentId = new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent"));
-		agentManager.startAgent(JNDILookup.UserAgentLookup, agentId);
+		agentsRest.runAgent("UserAgent", user.getUsername());
 		for(User u : chatManager.loggedInUsers()) {
 			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;
@@ -82,7 +82,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.logout(username)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		agentManager.stopAgent(agentId);
+		agentsRest.stopAgent(agentId);
 		for(User u : chatManager.loggedInUsers()) {
 			if(!u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
 				continue;

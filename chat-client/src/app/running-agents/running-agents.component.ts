@@ -30,9 +30,9 @@ export class RunningAgentsComponent implements OnInit {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'name': return compare(a.name, b.name, isAsc);
-        case 'alias': return compare(a.alias, b.alias, isAsc);
-        case 'address': return compare(a.address, b.address, isAsc);
-        case 'type': return compare(a.type, b.type, isAsc);
+        case 'alias': return compare(a.host.alias, b.host.alias, isAsc);
+        case 'address': return compare(a.host.address, b.host.address, isAsc);
+        case 'type': return compare(a.type.name, b.type.name, isAsc);
         default: return 0;
       }
     });

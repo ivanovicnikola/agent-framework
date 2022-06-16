@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AgentType } from '../model/agent-type';
 import { AID } from '../model/AID';
+import { Host } from '../model/host';
 import { Message } from '../model/message';
 import { User } from '../model/user';
 import { AgentService } from './agent.service';
@@ -112,7 +114,7 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       data[1].split("|").forEach((agent: string) => {
         if (agent) {
             let agentData = agent.split(",");
-            runningAgents.push(new AID(agentData[0], agentData[1], agentData[2], agentData[3]));
+            runningAgents.push(new AID(agentData[0], new Host(agentData[1], agentData[2]), new AgentType(agentData[3])));
         }
       });
       agentService.runningAgents = runningAgents;
