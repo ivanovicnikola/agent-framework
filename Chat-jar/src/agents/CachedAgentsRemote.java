@@ -10,4 +10,5 @@ public interface CachedAgentsRemote {
 	public void deleteByAID(AID agentId);
 	public List<AID> getAllAgents();
 	public void setAllAgents(List<AID> allAgents);
+	public void removeNode(String nodeAlias);
 }

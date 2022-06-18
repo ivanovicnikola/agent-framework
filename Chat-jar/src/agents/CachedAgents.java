@@ -82,4 +82,15 @@ public class CachedAgents implements CachedAgentsRemote{
 		this.allAgents = allAgents;
 	}
 
+	@Override
+	public void removeNode(String nodeAlias) {
+		List<AID> temp = new ArrayList<>();
+		for(AID agentId : allAgents) {
+			if(!agentId.getHost().getAddress().equals(nodeAlias)) {
+				temp.add(agentId);
+			}
+		}
+		allAgents = temp;
+	}
+
 }

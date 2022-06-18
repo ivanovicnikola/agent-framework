@@ -127,6 +127,10 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void deleteNode(String nodeAlias) {
 		System.out.println("Node removed: " + nodeAlias);
 		connections.remove(nodeAlias);
+		chatManager.logoutNode(nodeAlias);
+		cachedAgents.removeNode(nodeAlias);
+		notifyUserAgents("GET_LOGGEDIN");
+		notifyUserAgents("GET_RUNNING");
 	}
 
 	@Override
@@ -203,14 +207,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void setLoggedInRemote(List<User> users) {
 		System.out.println("Number of logged users: " + users.size());
 		chatManager.setLoggedInUsers(users);
-		ACLMessage message = new ACLMessage();
-		for(User u : chatManager.loggedInUsers()) {
-			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			}
-		}
-		message.userArgs.put("command", "GET_LOGGEDIN");
-		messageManager.post(message);
+		notifyUserAgents("GET_LOGGEDIN");
 	}
 
 	@Override
@@ -229,28 +226,14 @@ public class ConnectionManagerBean implements ConnectionManager {
 	public void setRegisteredRemote(List<User> users) {
 		System.out.println("Number of registered users: " + users.size());
 		chatManager.setRegisteredUsers(users);
-		ACLMessage message = new ACLMessage();
-		for(User u : chatManager.loggedInUsers()) {
-			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			}
-		}
-		message.userArgs.put("command", "GET_REGISTERED");
-		messageManager.post(message);
+		notifyUserAgents("GET_REGISTERED");
 	}
 
 	@Override
 	public void setRunningRemote(List<AID> agentIds) {
 		System.out.println("Number of running agents: " + agentIds.size());
 		cachedAgents.setAllAgents(agentIds);
-		ACLMessage message = new ACLMessage();
-		for(User u : chatManager.loggedInUsers()) {
-			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
-			}
-		}
-		message.userArgs.put("command", "GET_RUNNING");
-		messageManager.post(message);
+		notifyUserAgents("GET_RUNNING");
 	}
 
 	@Override
@@ -264,5 +247,16 @@ public class ConnectionManagerBean implements ConnectionManager {
 			resteasyClient.close();
 		}	
 	}
-
+	
+	private void notifyUserAgents(String command) {
+		ACLMessage message = new ACLMessage();
+		for(User u : chatManager.loggedInUsers()) {
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+			}
+		}
+		message.userArgs.put("command", command);
+		messageManager.post(message);
+	}
+	
 }
