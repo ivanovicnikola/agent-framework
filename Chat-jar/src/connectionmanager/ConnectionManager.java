@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import agents.AID;
 import models.User;
 
 public interface ConnectionManager {
@@ -58,4 +59,16 @@ public interface ConnectionManager {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void setRegisteredRemote(List<User> users);
+	
+	@POST
+	@Path("/users/loggedIn")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void setRunningRemote(List<AID> agentIds);
+	
+	@POST
+	@Path("/notify/running")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void notifyAllRunning();
 }

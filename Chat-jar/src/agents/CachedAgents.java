@@ -1,12 +1,14 @@
 package agents;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Remote;
 import javax.ejb.Singleton;
+
+import connectionmanager.ConnectionManager;
 
 /**
  * Session Bean implementation class CachedAgents
@@ -17,6 +19,10 @@ import javax.ejb.Singleton;
 public class CachedAgents implements CachedAgentsRemote{
 
 	List<Agent> runningAgents;
+	List<AID> allAgents;
+	
+	@EJB
+	private ConnectionManager connectionManager;
 
 	/**
 	 * Default constructor.
@@ -24,6 +30,7 @@ public class CachedAgents implements CachedAgentsRemote{
 	public CachedAgents() {
 
 		runningAgents = new ArrayList<>();
+		allAgents = new ArrayList<>();
 	}
 
 	@Override
@@ -34,6 +41,8 @@ public class CachedAgents implements CachedAgentsRemote{
 	@Override
 	public void addRunningAgent(Agent agent) {
 		runningAgents.add(agent);
+		allAgents.add(agent.getAgentId());
+		connectionManager.notifyAllRunning();
 	}
 
 	@Override
@@ -54,6 +63,16 @@ public class CachedAgents implements CachedAgentsRemote{
 				return;
 			}
 		}
+	}
+
+	@Override
+	public List<AID> getAllAgents() {
+		return allAgents;
+	}
+
+	@Override
+	public void setAllAgents(List<AID> allAgents) {
+		this.allAgents = allAgents;
 	}
 
 }

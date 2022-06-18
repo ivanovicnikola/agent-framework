@@ -81,8 +81,8 @@ public class UserAgent implements Agent {
 			break;
 		case "GET_RUNNING":
 			response = "RUNNING!";
-			for(Agent agent : cachedAgents.getRunningAgents()) {
-				response += agent.getAgentId().toString() + "|";
+			for(AID agentId : cachedAgents.getAllAgents()) {
+				response += agentId.toString() + "|";
 			}
 			break;
 		case "GET_CLASSES":

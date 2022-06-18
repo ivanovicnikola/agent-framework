@@ -22,6 +22,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import agents.AID;
 import agents.AgentType;
+import agents.CachedAgentsRemote;
 import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
@@ -49,6 +50,9 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@EJB
 	private MessageManagerRemote messageManager;
+	
+	@EJB
+	private CachedAgentsRemote cachedAgents;
 	
 	@PostConstruct
 	private void init() {
@@ -106,6 +110,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 				ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
 				rest.setLoggedInRemote(chatManager.loggedInUsers());
 				rest.setRegisteredRemote(chatManager.registeredUsers());
+				rest.setRunningRemote(cachedAgents.getAllAgents());
 				resteasyClient.close();
 			}
 		}).start();
@@ -232,6 +237,32 @@ public class ConnectionManagerBean implements ConnectionManager {
 		}
 		message.userArgs.put("command", "GET_REGISTERED");
 		messageManager.post(message);
+	}
+
+	@Override
+	public void setRunningRemote(List<AID> agentIds) {
+		System.out.println("Number of running agents: " + agentIds.size());
+		cachedAgents.setAllAgents(agentIds);
+		ACLMessage message = new ACLMessage();
+		for(User u : chatManager.loggedInUsers()) {
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+			}
+		}
+		message.userArgs.put("command", "GET_RUNNING");
+		messageManager.post(message);
+	}
+
+	@Override
+	public void notifyAllRunning() {
+		for (String c: connections) {
+			System.out.println("Sending running users to node: " + c);
+			ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = resteasyClient.target("http://" + c + "/Chat-war/api/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.setRunningRemote(cachedAgents.getAllAgents());
+			resteasyClient.close();
+		}	
 	}
 
 }
