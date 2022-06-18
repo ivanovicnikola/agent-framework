@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AgentClassesComponent } from './agent-classes/agent-classes.component';
 import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
+import { PerformativesComponent } from './performatives/performatives.component';
 import { RegisteredUsersComponent } from './registered-users/registered-users.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { RunningAgentsComponent } from './running-agents/running-agents.component';
@@ -19,7 +20,8 @@ const routes: Routes = [
   { path: 'message-all', component: MessageAllComponent},
   { path: 'messages', component: MessagesComponent},
   { path: 'running-agents', component: RunningAgentsComponent},
-  { path: 'agent-classes', component: AgentClassesComponent}
+  { path: 'agent-classes', component: AgentClassesComponent},
+  { path: 'performatives', component: PerformativesComponent}
 ];
 
 @NgModule({

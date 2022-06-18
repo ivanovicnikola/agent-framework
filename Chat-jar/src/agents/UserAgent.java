@@ -11,6 +11,7 @@ import javax.ejb.Stateful;
 import agentmanager.AgentManagerRemote;
 import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
+import messagemanager.MessageManagerRemote;
 import messagestorage.MessageStorageRemote;
 import models.Message;
 import models.User;
@@ -35,6 +36,8 @@ public class UserAgent implements Agent {
 	private ChatManagerRemote chatManager;
 	@EJB
 	private MessageStorageRemote messageStorage;
+	@EJB
+	private MessageManagerRemote messageManager;
 
 	@PostConstruct
 	public void postConstruct() {
@@ -86,6 +89,12 @@ public class UserAgent implements Agent {
 			response = "CLASSES!";
 			for(AgentType agentType : agentManager.getClasses()) {
 				response += agentType.getName() + "|";
+			}
+			break;
+		case "GET_PERFORMATIVES":
+			response = "PERFORMATIVES!";
+			for(String performative : messageManager.getPerformatives()) {
+				response += performative + "|";
 			}
 			break;
 		default:

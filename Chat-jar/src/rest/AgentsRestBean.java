@@ -72,4 +72,13 @@ public class AgentsRestBean implements AgentsRest {
 		messageManager.post(message);
 	}
 
+	@Override
+	public void getPerformatives(String username) {
+		User user = chatManager.getByUsername(username);
+		ACLMessage message = new ACLMessage();
+		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.userArgs.put("command", "GET_PERFORMATIVES");
+		messageManager.post(message);
+	}
+
 }

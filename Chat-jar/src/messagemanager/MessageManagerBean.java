@@ -1,5 +1,8 @@
 package messagemanager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
@@ -72,6 +75,15 @@ public class MessageManagerBean implements MessageManagerRemote {
 	@Override
 	public MessageConsumer getConsumer() {
 		return factory.getConsumer(session);
+	}
+
+	@Override
+	public List<String> getPerformatives() {
+		final Performative[] arr = Performative.values();
+		List<String> list = new ArrayList<>(arr.length);
+		for (Performative p : arr)
+			list.add(p.toString());
+		return list;
 	}
 
 

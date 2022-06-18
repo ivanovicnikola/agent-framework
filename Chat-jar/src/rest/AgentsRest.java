@@ -30,4 +30,8 @@ public interface AgentsRest {
 	@Path("/stop")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void stopAgent(AID agentId);
+	
+	@GET
+	@Path("/performatives")
+	public void getPerformatives(@HeaderParam("Authorization") String username);
 }

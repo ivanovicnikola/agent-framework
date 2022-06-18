@@ -128,6 +128,15 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       });
       agentService.agentClasses = agentClasses;
     }
+    else if(data[0] === "PERFORMATIVES") {
+      let performatives: string[] = [];
+      data[1].split("|").forEach((performative: string) => {
+        if (performative) {
+          performatives.push(performative);
+        }
+      });
+      agentService.performatives = performatives;
+    }
     else {
       toastr.info(data[1]);
     }

@@ -12,6 +12,7 @@ export class AgentService {
 
   runningAgents: AID[] = []
   agentClasses: AgentType[] = []
+  performatives: string[] = []
 
   constructor(private http: HttpClient) { }
   
@@ -21,5 +22,9 @@ export class AgentService {
 
   getClasses() {
     return this.http.get(baseUrl + 'classes').subscribe();
+  }
+
+  getPerformatives() {
+    return this.http.get(baseUrl + 'performatives').subscribe();
   }
 }
