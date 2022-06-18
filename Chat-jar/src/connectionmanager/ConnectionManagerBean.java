@@ -22,6 +22,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 import agents.AID;
 import agents.AgentType;
+import agents.AgentTypesRemote;
 import agents.CachedAgentsRemote;
 import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
@@ -53,6 +54,9 @@ public class ConnectionManagerBean implements ConnectionManager {
 	
 	@EJB
 	private CachedAgentsRemote cachedAgents;
+	
+	@EJB
+	private AgentTypesRemote agentTypes;
 	
 	@PostConstruct
 	private void init() {
@@ -111,12 +115,25 @@ public class ConnectionManagerBean implements ConnectionManager {
 				rest.setLoggedInRemote(chatManager.loggedInUsers());
 				rest.setRegisteredRemote(chatManager.registeredUsers());
 				rest.setRunningRemote(cachedAgents.getAllAgents());
+				List<AgentType> types = rest.getClasses();
+				agentTypes.addAgentTypes(types);
 				resteasyClient.close();
+				notifyAllAgentClasses();
 			}
 		}).start();
 		return connections;
 	}
 
+	private void notifyAllAgentClasses() {
+		for(String c : connections) {
+			ResteasyClient client = new ResteasyClientBuilder().build();
+			ResteasyWebTarget rtarget = client.target("http://" + c + "/Chat-war/api/connection");
+			ConnectionManager rest = rtarget.proxy(ConnectionManager.class);
+			rest.postClasses(agentTypes.getAgentTypes());
+			client.close();
+		}
+	}
+	
 	@Override
 	public void addNode(String nodeAlias) {
 		System.out.println("New node added: " + nodeAlias);
@@ -257,6 +274,18 @@ public class ConnectionManagerBean implements ConnectionManager {
 		}
 		message.userArgs.put("command", command);
 		messageManager.post(message);
+	}
+
+	@Override
+	public List<AgentType> getClasses() {
+		return agentTypes.getAgentTypes();
+	}
+
+	@Override
+	public void postClasses(List<AgentType> types) {
+		System.out.println("Number of agent classes: " + types.size());
+		agentTypes.addAgentTypes(types);
+		notifyUserAgents("GET_CLASSES");
 	}
 	
 }

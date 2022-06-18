@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import agents.AID;
+import agents.AgentType;
 import models.User;
 
 public interface ConnectionManager {
@@ -71,4 +72,12 @@ public interface ConnectionManager {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void notifyAllRunning();
+	
+	@GET
+	@Path("/agents/classes")
+	public List<AgentType> getClasses();
+	
+	@POST
+	@Path("/agents/classes")
+	public void postClasses(List<AgentType> types);
 }

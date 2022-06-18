@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
-import agentmanager.AgentManagerRemote;
 import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
@@ -29,7 +28,7 @@ public class UserAgent implements Agent {
 	@EJB
 	private CachedAgentsRemote cachedAgents;
 	@EJB
-	private AgentManagerRemote agentManager;
+	private AgentTypesRemote agentTypes;
 	@EJB
 	private WSChat ws;
 	@EJB
@@ -87,7 +86,7 @@ public class UserAgent implements Agent {
 			break;
 		case "GET_CLASSES":
 			response = "CLASSES!";
-			for(AgentType agentType : agentManager.getClasses()) {
+			for(AgentType agentType : agentTypes.getAgentTypes()) {
 				response += agentType.getName() + "|";
 			}
 			break;
