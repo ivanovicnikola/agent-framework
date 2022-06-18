@@ -60,7 +60,14 @@ public class CachedAgents implements CachedAgentsRemote{
 		for(Agent agent : runningAgents) {
 			if(agent.getAgentId().equals(agentId)) {
 				runningAgents.remove(agent);
-				return;
+				break;
+			}
+		}
+		for(AID aid : allAgents) {
+			if(aid.equals(agentId)) {
+				allAgents.remove(aid);
+				connectionManager.notifyAllRunning();
+				break;
 			}
 		}
 	}
