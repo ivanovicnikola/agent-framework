@@ -75,9 +75,11 @@ public interface ConnectionManager {
 	
 	@GET
 	@Path("/agents/classes")
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<AgentType> getClasses();
 	
 	@POST
 	@Path("/agents/classes")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void postClasses(List<AgentType> types);
 }
