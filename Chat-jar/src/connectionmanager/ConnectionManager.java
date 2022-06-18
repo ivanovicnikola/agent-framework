@@ -61,7 +61,7 @@ public interface ConnectionManager {
 	public void setRegisteredRemote(List<User> users);
 	
 	@POST
-	@Path("/users/loggedIn")
+	@Path("/users/running")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void setRunningRemote(List<AID> agentIds);
