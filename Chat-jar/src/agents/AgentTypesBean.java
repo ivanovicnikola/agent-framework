@@ -44,7 +44,7 @@ public class AgentTypesBean implements AgentTypesRemote {
 	
 	private boolean containsType(AgentType type) {
 		for(AgentType agentType: agentTypes) {
-			if(agentType.getName().equals(type)) {
+			if(agentType.getName().equals(type.getName())) {
 				return true;
 			}
 		}
