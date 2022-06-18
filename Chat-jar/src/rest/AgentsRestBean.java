@@ -29,8 +29,11 @@ public class AgentsRestBean implements AgentsRest {
 	
 	@Override
 	public void getClasses(String username) {
-		// TODO Auto-generated method stub
-		
+		User user = chatManager.getByUsername(username);
+		ACLMessage message = new ACLMessage();
+		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.userArgs.put("command", "GET_CLASSES");
+		messageManager.post(message);
 	}
 
 	@Override

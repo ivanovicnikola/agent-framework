@@ -119,6 +119,15 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       });
       agentService.runningAgents = runningAgents;
     }
+    else if(data[0] === "CLASSES") {
+      let agentClasses: AgentType[] = [];
+      data[1].split("|").forEach((agentType: string) => {
+        if (agentType) {
+          agentClasses.push(new AgentType(agentType));
+        }
+      });
+      agentService.agentClasses = agentClasses;
+    }
     else {
       toastr.info(data[1]);
     }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AgentClassesComponent } from './agent-classes/agent-classes.component';
 import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RegisteredUsersComponent } from './registered-users/registered-users.component';
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'send-message', component: SendMessageComponent},
   { path: 'message-all', component: MessageAllComponent},
   { path: 'messages', component: MessagesComponent},
-  { path: 'running-agents', component: RunningAgentsComponent}
+  { path: 'running-agents', component: RunningAgentsComponent},
+  { path: 'agent-classes', component: AgentClassesComponent}
 ];
 
 @NgModule({

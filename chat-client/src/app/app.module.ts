@@ -52,6 +52,7 @@ import { SendMessageComponent } from './send-message/send-message.component';
 import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
 import { RunningAgentsComponent } from './running-agents/running-agents.component';
+import { AgentClassesComponent } from './agent-classes/agent-classes.component';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { RunningAgentsComponent } from './running-agents/running-agents.componen
     SendMessageComponent,
     MessageAllComponent,
     MessagesComponent,
-    RunningAgentsComponent
+    RunningAgentsComponent,
+    AgentClassesComponent
   ],
   imports: [
     BrowserModule,
