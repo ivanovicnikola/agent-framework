@@ -117,6 +117,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 				rest.setRunningRemote(cachedAgents.getAllAgents());
 				List<AgentType> types = rest.getClasses();
 				System.out.println("Number of agent classes: " + types.size());
+				notifyUserAgents("GET_CLASSES");
 				agentTypes.addAgentTypes(types);
 				resteasyClient.close();
 				notifyAllAgentClasses();
