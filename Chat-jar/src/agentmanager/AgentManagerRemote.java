@@ -10,7 +10,7 @@ import agents.AgentType;
 
 @Remote
 public interface AgentManagerRemote {
-	public AID startAgent(String name, AID agentId);
+	public AID startAgent(AID agentId);
 	public Agent getAgentById(AID agentId);
 	public void stopAgent(AID agentId);
 	public List<AgentType> getClasses();

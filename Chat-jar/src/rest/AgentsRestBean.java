@@ -12,7 +12,6 @@ import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
 import util.AgentCenter;
-import util.JNDILookup;
 
 @Stateless
 @Path("/agents")
@@ -48,7 +47,7 @@ public class AgentsRestBean implements AgentsRest {
 	@Override
 	public void runAgent(String type, String name) {
 		AID agentId = new AID(name, AgentCenter.getHost(), new AgentType(type));
-		agentManager.startAgent(JNDILookup.UserAgentLookup, agentId);
+		agentManager.startAgent(agentId);
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {

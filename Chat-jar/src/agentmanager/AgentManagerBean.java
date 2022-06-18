@@ -11,6 +11,7 @@ import agents.AID;
 import agents.Agent;
 import agents.AgentType;
 import agents.CachedAgentsRemote;
+import agents.UserAgent;
 import util.JNDILookup;
 import util.JNDITreeParser;
 
@@ -31,8 +32,8 @@ public class AgentManagerBean implements AgentManagerRemote {
     }
 
 	@Override
-	public AID startAgent(String name, AID agentId) {
-		Agent agent = (Agent) JNDILookup.lookUp(name, Agent.class);
+	public AID startAgent(AID agentId) {
+		Agent agent = (Agent) JNDILookup.lookUp(getAgentLookup(agentId.getType()), Agent.class);
 		return agent.init(agentId);
 	}
 
@@ -53,6 +54,12 @@ public class AgentManagerBean implements AgentManagerRemote {
 		} catch (NamingException ex) {
 			throw new IllegalStateException(ex);
 		}
+	}
+	
+	private String getAgentLookup(AgentType agentType) {
+		return String.format("ejb:Chat-ear/Chat-jar//%s!%s?stateful",
+				UserAgent.class.getSimpleName(), Agent.class.getName());
+	
 	}
 
 }
