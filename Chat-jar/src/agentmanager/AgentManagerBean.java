@@ -8,7 +8,6 @@ import agents.AID;
 import agents.Agent;
 import agents.AgentType;
 import agents.CachedAgentsRemote;
-import agents.UserAgent;
 import util.JNDILookup;
 
 /**
@@ -43,7 +42,7 @@ public class AgentManagerBean implements AgentManagerRemote {
 	
 	private String getAgentLookup(AgentType agentType) {
 		return String.format("ejb:Chat-ear/Chat-jar//%s!%s?stateful",
-				UserAgent.class.getSimpleName(), Agent.class.getName());
+				agentType.getName(), Agent.class.getName());
 	
 	}
 

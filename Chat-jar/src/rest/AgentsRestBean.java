@@ -80,4 +80,16 @@ public class AgentsRestBean implements AgentsRest {
 		messageManager.post(message);
 	}
 
+	@Override
+	public void sendMessage(ACLMessage message) {
+		for(AID receiver: message.receivers) {
+			if(receiver.getType().getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				ACLMessage m = message;
+				m.receivers.clear();
+				m.receivers.add(receiver);
+				messageManager.post(m);
+			}
+		}
+	}
+
 }

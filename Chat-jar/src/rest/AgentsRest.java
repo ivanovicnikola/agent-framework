@@ -4,12 +4,14 @@ import javax.ejb.Remote;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import agents.AID;
+import messagemanager.ACLMessage;
 
 @Remote
 public interface AgentsRest {
@@ -34,4 +36,8 @@ public interface AgentsRest {
 	@GET
 	@Path("/performatives")
 	public void getPerformatives(@HeaderParam("Authorization") String username);
+	
+	@POST
+	@Path("/messages")
+	public void sendMessage(ACLMessage message);
 }

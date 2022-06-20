@@ -15,5 +15,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Chat-war"/>
 	<classpathentry kind="lib" path="lib/jboss-cli-client.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-client.jar"/>
+	<classpathentry kind="lib" path="lib/jsoup-1.15.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
