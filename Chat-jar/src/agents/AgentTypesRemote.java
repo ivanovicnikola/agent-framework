@@ -8,4 +8,6 @@ import javax.ejb.Remote;
 public interface AgentTypesRemote {
 	public void addAgentTypes(List<AgentType> types);
 	public List<AgentType> getAgentTypes();
+	public void setAgentTypes(List<AgentType> types);
+	public void removeNode(String nodeAlias);
 }

@@ -1,5 +1,6 @@
 package agents;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -36,23 +37,28 @@ public class AgentTypesBean implements AgentTypesRemote {
 	@Override
 	public void addAgentTypes(List<AgentType> types) {
 		for(AgentType type : types) {
-			if(!containsType(type)) {
-				agentTypes.add(type);
-			}
+			agentTypes.add(type);
 		}
-	}
-	
-	private boolean containsType(AgentType type) {
-		for(AgentType agentType: agentTypes) {
-			if(agentType.getName().equals(type.getName())) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override
 	public List<AgentType> getAgentTypes() {
 		return agentTypes;
+	}
+
+	@Override
+	public void setAgentTypes(List<AgentType> types) {
+		agentTypes = types;
+	}
+
+	@Override
+	public void removeNode(String nodeAlias) {
+		List<AgentType> temp = new ArrayList<>();
+		for(AgentType agentType : agentTypes) {
+			if(!agentType.getHost().getAlias().equals(nodeAlias)) {
+				temp.add(agentType);
+			}
+		}
+		agentTypes = temp;
 	}
 }
