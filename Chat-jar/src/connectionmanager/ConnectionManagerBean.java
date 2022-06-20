@@ -117,8 +117,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 				rest.setRunningRemote(cachedAgents.getAllAgents());
 				List<AgentType> types = rest.getClasses();
 				System.out.println("Number of agent classes: " + types.size());
-				notifyUserAgents("GET_CLASSES");
 				agentTypes.addAgentTypes(types);
+				notifyUserAgents("GET_CLASSES");
 				resteasyClient.close();
 				notifyAllAgentClasses();
 			}
@@ -286,7 +286,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 	@Override
 	public void postClasses(List<AgentType> types) {
 		System.out.println("Number of agent classes: " + types.size());
-		agentTypes.addAgentTypes(types);
+		agentTypes.setAgentTypes(types);
 		notifyUserAgents("GET_CLASSES");
 	}
 	
