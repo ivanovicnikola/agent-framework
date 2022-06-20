@@ -148,8 +148,10 @@ public class ConnectionManagerBean implements ConnectionManager {
 		connections.remove(nodeAlias);
 		chatManager.logoutNode(nodeAlias);
 		cachedAgents.removeNode(nodeAlias);
+		agentTypes.removeNode(nodeAlias);
 		notifyUserAgents("GET_LOGGEDIN");
 		notifyUserAgents("GET_RUNNING");
+		notifyUserAgents("GET_CLASSES");
 	}
 
 	@Override
