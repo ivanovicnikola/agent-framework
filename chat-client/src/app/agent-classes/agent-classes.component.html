@@ -6,11 +6,15 @@
                 <thead>
                     <tr>
                         <th mat-sort-header="name">Name</th>
+                        <th mat-sort-header="address">Node address</th>
+                        <th mat-sort-header="alias">Node alias</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let agentType of agentService.agentClasses">
                         <td>{{agentType.name}}</td>
+                        <td>{{agentType.host.address}}</td>
+                        <td>{{agentType.host.alias}}</td>
                     </tr>
                 </tbody>
             </table>

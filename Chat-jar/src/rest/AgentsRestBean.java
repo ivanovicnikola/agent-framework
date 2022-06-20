@@ -30,7 +30,7 @@ public class AgentsRestBean implements AgentsRest {
 	public void getClasses(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
-		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		message.userArgs.put("command", "GET_CLASSES");
 		messageManager.post(message);
 	}
@@ -39,19 +39,19 @@ public class AgentsRestBean implements AgentsRest {
 	public void getRunning(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
-		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		message.userArgs.put("command", "GET_RUNNING");
 		messageManager.post(message);
 	}
 
 	@Override
 	public void runAgent(String type, String name) {
-		AID agentId = new AID(name, AgentCenter.getHost(), new AgentType(type));
+		AID agentId = new AID(name, new AgentType(type, AgentCenter.getHost()));
 		agentManager.startAgent(agentId);
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent",  u.getHost())));
 			}	
 		}
 		message.userArgs.put("command", "GET_RUNNING");
@@ -64,7 +64,7 @@ public class AgentsRestBean implements AgentsRest {
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
 			}	
 		}
 		message.userArgs.put("command", "GET_RUNNING");
@@ -75,7 +75,7 @@ public class AgentsRestBean implements AgentsRest {
 	public void getPerformatives(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
-		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		message.userArgs.put("command", "GET_PERFORMATIVES");
 		messageManager.post(message);
 	}

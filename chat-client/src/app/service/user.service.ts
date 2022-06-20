@@ -114,7 +114,7 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       data[1].split("|").forEach((agent: string) => {
         if (agent) {
             let agentData = agent.split(",");
-            runningAgents.push(new AID(agentData[0], new Host(agentData[1], agentData[2]), new AgentType(agentData[3])));
+            runningAgents.push(new AID(agentData[0], new AgentType(agentData[3], new Host(agentData[1], agentData[2]))));
         }
       });
       agentService.runningAgents = runningAgents;
@@ -123,7 +123,8 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       let agentClasses: AgentType[] = [];
       data[1].split("|").forEach((agentType: string) => {
         if (agentType) {
-          agentClasses.push(new AgentType(agentType));
+          let typeData = agentType.split(",");
+          agentClasses.push(new AgentType(typeData[0], new Host(typeData[1], typeData[2])));
         }
       });
       agentService.agentClasses = agentClasses;

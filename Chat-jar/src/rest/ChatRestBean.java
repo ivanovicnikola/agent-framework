@@ -39,7 +39,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
 			}
 		}
 		message.userArgs.put("command", "GET_REGISTERED");
@@ -56,7 +56,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
 			}
 		}
 		message.userArgs.put("command", "GET_LOGGEDIN");
@@ -68,7 +68,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	public void getloggedInUsers(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
-		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		message.userArgs.put("command", "GET_LOGGEDIN");
 		messageManager.post(message);
 	}
@@ -76,7 +76,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	@Override
 	public Response logout(String username) {
 		User user = chatManager.getByUsername(username);
-		AID agentId = new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent"));
+		AID agentId = new AID(user.getUsername(), new AgentType("UserAgent", user.getHost()));
 		if(!chatManager.logout(username)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
@@ -84,7 +84,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
 			}
 		}
 		message.userArgs.put("command", "GET_LOGGEDIN");
@@ -96,7 +96,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	public void getRegisteredUsers(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage message = new ACLMessage();
-		message.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		message.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		message.userArgs.put("command", "GET_REGISTERED");
 		messageManager.post(message);
 	}

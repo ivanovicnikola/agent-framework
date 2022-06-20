@@ -30,6 +30,8 @@ export class AgentClassesComponent implements OnInit {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'name': return compare(a.name, b.name, isAsc);
+        case 'address': return compare(a.host.address, b.host.address, isAsc);
+        case 'alias': return compare(a.host.alias, b.host.alias, isAsc);
         default: return 0;
       }
     });

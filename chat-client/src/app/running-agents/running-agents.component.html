@@ -14,8 +14,8 @@
                 <tbody>
                     <tr *ngFor="let agentId of agentService.runningAgents">
                         <td>{{agentId.name}}</td>
-                        <td>{{agentId.host.alias}}</td>
-                        <td>{{agentId.host.address}}</td>
+                        <td>{{agentId.type.host.alias}}</td>
+                        <td>{{agentId.type.host.address}}</td>
                         <td>{{agentId.type.name}}</td>
                     </tr>
                 </tbody>

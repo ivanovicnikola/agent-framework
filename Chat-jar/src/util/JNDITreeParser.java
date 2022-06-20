@@ -74,7 +74,7 @@ public class JNDITreeParser {
 	
 	private AgentType parseEjbName(String parentModule, String module, String ejbName) {
 		ejbName = extractAgentName(ejbName);
-		return new AgentType(ejbName);
+		return new AgentType(ejbName, AgentCenter.getHost());
 	}
 	
 	private String extractAgentName(String ejbName) {

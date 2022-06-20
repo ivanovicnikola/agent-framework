@@ -87,7 +87,7 @@ public class UserAgent implements Agent {
 		case "GET_CLASSES":
 			response = "CLASSES!";
 			for(AgentType agentType : agentTypes.getAgentTypes()) {
-				response += agentType.getName() + "|";
+				response += agentType.toString() + "|";
 			}
 			break;
 		case "GET_PERFORMATIVES":

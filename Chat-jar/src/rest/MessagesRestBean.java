@@ -39,7 +39,7 @@ public class MessagesRestBean implements MessagesRest {
 		if(user.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
 			ACLMessage aclMessage = new ACLMessage();
 			aclMessage.userArgs.put("command", "MESSAGE");
-			aclMessage.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+			aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 			aclMessage.contentObj = message;
 			messageManager.post(aclMessage);
 		}
@@ -57,7 +57,7 @@ public class MessagesRestBean implements MessagesRest {
 	public void getUserMessages(String username) {
 		User user = chatManager.getByUsername(username);
 		ACLMessage aclMessage = new ACLMessage();
-		aclMessage.receivers.add(new AID(user.getUsername(), user.getHost(), new AgentType("UserAgent")));
+		aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent",  user.getHost())));
 		aclMessage.userArgs.put("command", "GET_MESSAGES");
 		messageManager.post(aclMessage);
 	}

@@ -271,7 +271,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), u.getHost(), new AgentType("UserAgent")));
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
 			}
 		}
 		message.userArgs.put("command", command);

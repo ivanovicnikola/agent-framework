@@ -86,7 +86,7 @@ public class CachedAgents implements CachedAgentsRemote{
 	public void removeNode(String nodeAlias) {
 		List<AID> temp = new ArrayList<>();
 		for(AID agentId : allAgents) {
-			if(!agentId.getHost().getAlias().equals(nodeAlias)) {
+			if(!agentId.getType().getHost().getAlias().equals(nodeAlias)) {
 				temp.add(agentId);
 			}
 		}
