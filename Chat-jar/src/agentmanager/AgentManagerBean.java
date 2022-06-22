@@ -8,6 +8,11 @@ import agents.AID;
 import agents.Agent;
 import agents.AgentType;
 import agents.CachedAgentsRemote;
+import chatmanager.ChatManagerRemote;
+import messagemanager.ACLMessage;
+import messagemanager.MessageManagerRemote;
+import models.User;
+import util.AgentCenter;
 import util.JNDILookup;
 
 /**
@@ -19,6 +24,10 @@ public class AgentManagerBean implements AgentManagerRemote {
 	
 	@EJB
 	private CachedAgentsRemote cachedAgents;
+	@EJB
+	private ChatManagerRemote chatManager;
+	@EJB
+	private MessageManagerRemote messageManager;
 	
     public AgentManagerBean() {
         
@@ -26,8 +35,20 @@ public class AgentManagerBean implements AgentManagerRemote {
 
 	@Override
 	public AID startAgent(AID agentId) {
+		if(getAgentById(agentId) != null) {
+			return null;
+		}
 		Agent agent = (Agent) JNDILookup.lookUp(getAgentLookup(agentId.getType()), Agent.class);
-		return agent.init(agentId);
+		agentId = agent.init(agentId);
+		ACLMessage message = new ACLMessage();
+		for(User u : chatManager.loggedInUsers()) {
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent",  u.getHost())));
+			}	
+		}
+		message.userArgs.put("command", "GET_RUNNING");
+		messageManager.post(message);
+		return agentId;
 	}
 
 	@Override
@@ -38,6 +59,14 @@ public class AgentManagerBean implements AgentManagerRemote {
 	@Override
 	public void stopAgent(AID agentId) {
 		cachedAgents.deleteByAID(agentId);
+		ACLMessage message = new ACLMessage();
+		for(User u : chatManager.loggedInUsers()) {
+			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
+				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
+			}	
+		}
+		message.userArgs.put("command", "GET_RUNNING");
+		messageManager.post(message);
 	}
 	
 	private String getAgentLookup(AgentType agentType) {

@@ -28,9 +28,6 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 	@EJB
 	private AgentManagerRemote agentManager;
 	
-	@EJB
-	private AgentsRest agentsRest;
-	
 	@Override
 	public Response register(User user) {
 		if(!chatManager.register(user)) {
@@ -52,7 +49,8 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.login(user)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		agentsRest.runAgent("UserAgent", user.getUsername());
+		AID agentId = new AID(user.getUsername(), new AgentType("UserAgent", AgentCenter.getHost()));
+		agentManager.startAgent(agentId);
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
@@ -80,7 +78,7 @@ public class ChatRestBean implements ChatRest, ChatRestLocal {
 		if(!chatManager.logout(username)) {
 			return Response.status(Response.Status.BAD_REQUEST).build();
 		}
-		agentsRest.stopAgent(agentId);
+		agentManager.stopAgent(agentId);
 		ACLMessage message = new ACLMessage();
 		for(User u : chatManager.loggedInUsers()) {
 			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {

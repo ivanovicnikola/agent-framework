@@ -1,6 +1,9 @@
 package agents;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Remote;
@@ -8,9 +11,14 @@ import javax.ejb.Stateful;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import messagemanager.ACLMessage;
+import messagemanager.MessageManagerRemote;
+import models.Apartment;
 
 @Stateful
 @Remote(Agent.class)
@@ -22,6 +30,8 @@ public class CollectorAgent implements Agent {
 	private static final long serialVersionUID = 1L;
 	@EJB
 	private CachedAgentsRemote cachedAgents;
+	@EJB
+	private MessageManagerRemote messageManager;
 	private AID agentId;
 	@Override
 	public AID init(AID agentId) {
@@ -32,12 +42,38 @@ public class CollectorAgent implements Agent {
 
 	@Override
 	public void handleMessage(ACLMessage message) {
-		// TODO Auto-generated method stub
-		Document doc;
 		try {
-			doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/lista/po-stranici/10/").timeout(6000).get();
+			Document doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/lista/po-stranici/10/").timeout(6000).get();
 			Elements body = doc.select("div.advert-list");
-			System.out.println(body.select("div.row offer").size());
+			System.out.println(body.select("div.offer-body").size());
+			List<Apartment> apartments = new ArrayList<>();
+			for(Element e : body.select("div.offer-body")) {
+				String title = e.select("a").text();
+				System.out.println(title);
+				String metaInfo = e.select("div.offer-meta-info").text();
+				System.out.println(metaInfo);
+				String location = e.select("p.offer-location").text();
+				System.out.println(location);
+				String price = e.select("p.offer-price").select("span").get(0).text();
+				System.out.println(price);
+				String surfaceArea = e.select("p.offer-price").select("span").get(1).text();
+				System.out.println(surfaceArea);
+				Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
+				apartments.add(apartment);
+			}
+			String location = (String) message.userArgs.get("location");
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				objectMapper.writeValue(new FileOutputStream(location), apartments);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			ACLMessage m = new ACLMessage();
+			m.sender = agentId;
+			m.receivers.add(message.replyTo);
+			m.userArgs.put("location", location);
+			messageManager.post(m);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -48,5 +84,4 @@ public class CollectorAgent implements Agent {
 	public AID getAgentId() {
 		return agentId;
 	}
-
 }

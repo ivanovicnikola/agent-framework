@@ -48,27 +48,11 @@ public class AgentsRestBean implements AgentsRest {
 	public void runAgent(String type, String name) {
 		AID agentId = new AID(name, new AgentType(type, AgentCenter.getHost()));
 		agentManager.startAgent(agentId);
-		ACLMessage message = new ACLMessage();
-		for(User u : chatManager.loggedInUsers()) {
-			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent",  u.getHost())));
-			}	
-		}
-		message.userArgs.put("command", "GET_RUNNING");
-		messageManager.post(message);
 	}
 
 	@Override
 	public void stopAgent(AID agentId) {
 		agentManager.stopAgent(agentId);
-		ACLMessage message = new ACLMessage();
-		for(User u : chatManager.loggedInUsers()) {
-			if(u.getHost().getAlias().equals(AgentCenter.getNodeAlias())) {
-				message.receivers.add(new AID(u.getUsername(), new AgentType("UserAgent", u.getHost())));
-			}	
-		}
-		message.userArgs.put("command", "GET_RUNNING");
-		messageManager.post(message);
 	}
 
 	@Override

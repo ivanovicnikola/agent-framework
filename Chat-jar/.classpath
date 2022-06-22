@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jboss-cli-client.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jboss-client.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jsoup-1.15.1.jar"/>
+	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-databind-2.5.4.jar"/>
+	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-core-2.5.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
