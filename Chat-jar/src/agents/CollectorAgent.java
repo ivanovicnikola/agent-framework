@@ -48,17 +48,17 @@ public class CollectorAgent implements Agent {
 			System.out.println(body.select("div.offer-body").size());
 			List<Apartment> apartments = new ArrayList<>();
 			for(Element e : body.select("div.offer-body")) {
-				String title = e.select("a").text();
+				String title = getProcessed(e.select("a").text());
 				System.out.println(title);
-				String metaInfo = e.select("div.offer-meta-info").text();
+				String metaInfo = getProcessed(e.select("div.offer-meta-info").text());
 				System.out.println(metaInfo);
-				String location = e.select("p.offer-location").text();
+				String location = getProcessed(e.select("p.offer-location").text());
 				System.out.println(location);
-				String price = e.select("p.offer-price").select("span").get(0).text();
+				String price = getProcessed(e.select("p.offer-price").select("span").get(0).text());
 				System.out.println(price);
-				String surfaceArea = e.select("p.offer-price").select("span").get(1).text();
+				String surfaceArea = getProcessed(e.select("p.offer-price").select("span").get(1).text());
 				System.out.println(surfaceArea);
-				Apartment apartment = new Apartment(title, null, location, price, surfaceArea);
+				Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
 				apartments.add(apartment);
 			}
 			String location = (String) message.userArgs.get("location");
@@ -81,6 +81,10 @@ public class CollectorAgent implements Agent {
 		}
 	}
 
+	private String getProcessed(String str) {
+		return str.replace("!", "").replace("|", "").replace(";", "");
+	}
+	
 	@Override
 	public AID getAgentId() {
 		return agentId;
