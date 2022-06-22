@@ -58,7 +58,7 @@ public class CollectorAgent implements Agent {
 				System.out.println(price);
 				String surfaceArea = e.select("p.offer-price").select("span").get(1).text();
 				System.out.println(surfaceArea);
-				Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
+				Apartment apartment = new Apartment(title, null, location, price, surfaceArea);
 				apartments.add(apartment);
 			}
 			String location = (String) message.userArgs.get("location");
@@ -72,6 +72,7 @@ public class CollectorAgent implements Agent {
 			ACLMessage m = new ACLMessage();
 			m.sender = agentId;
 			m.receivers.add(message.replyTo);
+			m.replyTo = message.sender;
 			m.userArgs.put("location", location);
 			messageManager.post(m);
 		} catch (IOException e) {

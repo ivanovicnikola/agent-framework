@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import messagemanager.ACLMessage;
+import messagemanager.MessageManagerRemote;
 import models.Apartment;
 
 @Stateful
@@ -27,6 +28,8 @@ public class SearchAgent implements Agent {
 	private static final long serialVersionUID = 1L;
 	@EJB
 	private CachedAgentsRemote cachedAgents;
+	@EJB
+	private MessageManagerRemote messageManager;
 	private AID agentId;
 
 	@Override
@@ -56,9 +59,11 @@ public class SearchAgent implements Agent {
 			e.printStackTrace();
 		}
 
-		for (Apartment apartment : apartments) {
-			System.out.println(apartment.toString());
-		}
+		ACLMessage m = new ACLMessage();
+		m.sender = agentId;
+		m.receivers.add(message.replyTo);
+		m.contentObj = apartments;
+		messageManager.post(m);
 	}
 
 	@Override

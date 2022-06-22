@@ -1,7 +1,13 @@
 package models;
 
-public class Apartment {
+import java.io.Serializable;
 
+public class Apartment implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String title;
 	private String metaInfo;
 	private String location;
@@ -61,7 +67,7 @@ public class Apartment {
 
 	@Override
 	public String toString() {
-		return title + "," + metaInfo + "," + location + "," + price + "," + surfaceArea;
+		return title + ";" + metaInfo + ";" + location + ";" + price + ";" + surfaceArea;
 	}
 
 }

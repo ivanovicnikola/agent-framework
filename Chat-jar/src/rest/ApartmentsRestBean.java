@@ -34,7 +34,10 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		agentManager.startAgent(collectorId);
 		AID searchId = new AID(user.getUsername(), new AgentType("SearchAgent", user.getHost()));
 		agentManager.startAgent(searchId);
+		AID masterId = new AID(user.getUsername(), new AgentType("MasterAgent", user.getHost()));
+		agentManager.startAgent(masterId);
 		ACLMessage m = new ACLMessage();
+		m.sender = masterId;
 		m.receivers.add(collectorId);
 		m.replyTo = searchId;
 		m.userArgs.put("location", location);

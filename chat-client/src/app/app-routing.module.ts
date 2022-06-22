@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AgentClassesComponent } from './agent-classes/agent-classes.component';
+import { ApartmentsComponent } from './apartments/apartments.component';
 import { MessageAllComponent } from './message-all/message-all.component';
 import { MessagesComponent } from './messages/messages.component';
 import { PerformativesComponent } from './performatives/performatives.component';
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'messages', component: MessagesComponent},
   { path: 'running-agents', component: RunningAgentsComponent},
   { path: 'agent-classes', component: AgentClassesComponent},
-  { path: 'performatives', component: PerformativesComponent}
+  { path: 'performatives', component: PerformativesComponent},
+  { path: 'apartments', component: ApartmentsComponent}
 ];
 
 @NgModule({

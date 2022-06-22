@@ -1,0 +1,27 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h1 style="text-align: center;">Apartments</h1>
+            <table matSort (matSortChange)="sortData($event)" class="table">
+                <thead>
+                    <tr>
+                        <th mat-sort-header="title">Title</th>
+                        <th mat-sort-header="metaInfo">Info</th>
+                        <th mat-sort-header="location">Location</th>
+                        <th mat-sort-header="price">Prices</th>
+                        <th mat-sort-header="surfaceArea">Surface area</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let apartment of apartmentService.apartments">
+                        <td>{{apartment.title}}</td>
+                        <td>{{apartment.metaInfo}}</td>
+                        <td>{{apartment.location}}</td>
+                        <td>{{apartment.price}}</td>
+                        <td>{{apartment.surfaceArea}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -4,10 +4,12 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AgentType } from '../model/agent-type';
 import { AID } from '../model/AID';
+import { Apartment } from '../model/apartment';
 import { Host } from '../model/host';
 import { Message } from '../model/message';
 import { User } from '../model/user';
 import { AgentService } from './agent.service';
+import { ApartmentService } from './apartment.service';
 import { MessageService } from './message.service';
 
 const baseUrl = 'http://localhost:8080/Chat-war/api/users/';
@@ -22,14 +24,14 @@ export class UserService {
   registeredUsers: User[] = [];
   user: User = new User('', '');
 
-  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router, private messageService: MessageService, private agentService: AgentService) { }
+  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router, private messageService: MessageService, private agentService: AgentService, private apartmentService: ApartmentService) { }
 
   signIn(user: User) {
     return this.http.post(baseUrl + 'login', user).subscribe({
       next: (user) => {
         this.user = user as User;
         this.isSignedIn = true;
-        initSocket(this, this.router, this.toastr, this.messageService, this.agentService)
+        initSocket(this, this.router, this.toastr, this.messageService, this.agentService, this.apartmentService)
         this.router.navigate(['send-message']);
       },
       error: () => (this.toastr.error("Invalid username/password"))
@@ -61,7 +63,7 @@ export class UserService {
   }
 }
 
-function initSocket(userService: UserService, router: Router, toastr: ToastrService, messageService: MessageService, agentService: AgentService) {
+function initSocket(userService: UserService, router: Router, toastr: ToastrService, messageService: MessageService, agentService: AgentService, apartmentService: ApartmentService) {
   let connection: WebSocket|null = new WebSocket("ws://localhost:8080/Chat-war/ws/" + userService.user.username);
   connection.onopen = function() {
     console.log("Socket is open");
@@ -137,6 +139,14 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
         }
       });
       agentService.performatives = performatives;
+    }
+    else if(data[0] === "APARTMENTS") {
+      data[1].split("|").forEach((apartment: string) => {
+        if (apartment) {
+          let apartmentData = apartment.split(";");
+          apartmentService.apartments.push(new Apartment(apartmentData[0], apartmentData[1], apartmentData[2], apartmentData[3], apartmentData[4]));
+        }
+      });
     }
     else {
       toastr.info(data[1]);
