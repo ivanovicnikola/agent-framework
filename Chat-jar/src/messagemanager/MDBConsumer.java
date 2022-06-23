@@ -62,7 +62,7 @@ public class MDBConsumer implements MessageListener {
 	
 	private void forwardMessage(ACLMessage message) {
 		ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
-		ResteasyWebTarget rtarget = resteasyClient.target("http://" + message.receivers.get(0) + "/Chat-war/api/agents");
+		ResteasyWebTarget rtarget = resteasyClient.target("http://" + message.receivers.get(0).getType().getHost().getAlias() + "/Chat-war/api/agents");
 		AgentsRest rest = rtarget.proxy(AgentsRest.class);
 		rest.sendMessage(message);
 		resteasyClient.close();
