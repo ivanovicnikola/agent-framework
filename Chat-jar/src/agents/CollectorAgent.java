@@ -75,8 +75,9 @@ public class CollectorAgent implements Agent {
 				Elements body = doc.select("div.preview-cards-container");
 				System.out.println(body.select("div.meta-container").size());
 				for(Element e : body.select("div.meta-container")) {
-					String title = "";
-					String metaInfo = getProcessed(e.select("p.preview-desc").text());
+					String title = getProcessed(e.select("p.preview-desc").text());
+					System.out.println(title);
+					String metaInfo = getProcessed(e.select("span.ng-star-inserted").get(1).text() + " " + e.select("span.ng-star-inserted").get(2).text() + " " + e.select("span.ng-star-inserted").get(3).text());
 					System.out.println(metaInfo);
 					String location = getProcessed(e.select("div.place-names").select("span.ng-star-inserted").text());
 					System.out.println(location);
