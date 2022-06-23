@@ -39,5 +39,6 @@ public interface AgentsRest {
 	
 	@POST
 	@Path("/messages")
+	@Consumes(MediaType.APPLICATION_JSON)
 	public void sendMessage(ACLMessage message);
 }
