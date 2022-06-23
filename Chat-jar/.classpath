@@ -19,8 +19,5 @@
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-databind-2.5.4.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-core-2.5.4.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-annotations-2.5.4.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-jaxrs-base-2.5.4.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-jaxrs-json-provider-2.5.4.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-module-jaxb-annotations-2.5.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
