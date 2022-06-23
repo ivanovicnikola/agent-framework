@@ -7,7 +7,7 @@
                     <label for="receiver" class="form-label">Receiver</label>
                     <select class="form-control" id="receiver" required [(ngModel)]="message.receiver" name="receiver" #receiver="ngModel">
                         <option selected disabled>Choose here</option>
-                        <option *ngFor="let user of userService.registeredUsers" [ngValue]="user">{{user.username}}</option>
+                        <option *ngFor="let user of userService.loggedUsers" [ngValue]="user">{{user.username}}</option>
                     </select>
                     <div [hidden]="receiver.valid || receiver.pristine"
                         class="alert alert-danger">

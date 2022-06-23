@@ -4,10 +4,6 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Path;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-
 import agents.AID;
 import agents.AgentType;
 import chatmanager.ChatManagerRemote;
@@ -27,30 +23,23 @@ public class MessagesRestBean implements MessagesRest {
 	
 	@Override
 	public void messageAll(Message message) {
+		ACLMessage aclMessage = new ACLMessage();
+		aclMessage.userArgs.put("command", "MESSAGE");
 		for(User user : chatManager.loggedInUsers()) {
-			message.setReceiver(user);
-			messageUser(message);
+			aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
 		}
+		aclMessage.contentObj = message;
+		messageManager.post(aclMessage);
 	}
 
 	@Override
 	public void messageUser(Message message) {
 		User user = chatManager.getByUsername(message.getReceiver().getUsername());
-		if(user.getHost().getAlias().equals(getNodeAlias() + ":8080")) {
-			ACLMessage aclMessage = new ACLMessage();
-			aclMessage.userArgs.put("command", "MESSAGE");
-			aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
-			aclMessage.contentObj = message;
-			messageManager.post(aclMessage);
-		}
-		else {
-			System.out.println("Sending message to node: " + user.getHost().getAlias());
-			ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
-			ResteasyWebTarget rtarget = resteasyClient.target("http://" + user.getHost().getAlias() + "/Chat-war/api/messages");
-			MessagesRest rest = rtarget.proxy(MessagesRest.class);
-			rest.messageUser(message);
-			resteasyClient.close();
-		}
+		ACLMessage aclMessage = new ACLMessage();
+		aclMessage.userArgs.put("command", "MESSAGE");
+		aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent", user.getHost())));
+		aclMessage.contentObj = message;
+		messageManager.post(aclMessage);
 	}
 
 	@Override
@@ -60,9 +49,5 @@ public class MessagesRestBean implements MessagesRest {
 		aclMessage.receivers.add(new AID(user.getUsername(), new AgentType("UserAgent",  user.getHost())));
 		aclMessage.userArgs.put("command", "GET_MESSAGES");
 		messageManager.post(aclMessage);
-	}
-
-	private String getNodeAlias() {		
-		return System.getProperty("jboss.node.name");
 	}
 }

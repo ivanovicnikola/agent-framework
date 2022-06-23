@@ -17,11 +17,11 @@ export class SendMessageComponent implements OnInit {
               private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.getRegisteredUsers();
+    this.getLoggedUsers();
   }
 
-  getRegisteredUsers() {
-    this.userService.getRegisteredUsers();
+  getLoggedUsers() {
+    this.userService.getLoggedUsers();
   }
 
   onSubmit() {
