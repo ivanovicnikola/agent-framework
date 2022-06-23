@@ -8,6 +8,8 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
@@ -68,7 +70,8 @@ public class UserAgent implements Agent {
 			break;
 		case "MESSAGE":
 			response = "MESSAGE!";
-			models.Message msg = (Message) message.contentObj;
+			ObjectMapper mapper = new ObjectMapper();
+			models.Message msg = mapper.convertValue(message.contentObj, models.Message.class);
 			msg.setDateCreated(LocalDateTime.now());
 			messageStorage.addMessage(msg);
 			response += msg.toString();
