@@ -41,6 +41,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		m.receivers.add(collectorId);
 		m.replyTo = searchId;
 		m.userArgs.put("location", location);
+		m.userArgs.put("source", "4_ZIDA");
 		messageManager.post(m);
 	}
 

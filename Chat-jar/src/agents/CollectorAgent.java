@@ -42,43 +42,71 @@ public class CollectorAgent implements Agent {
 
 	@Override
 	public void handleMessage(ACLMessage message) {
-		try {
-			Document doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/lista/po-stranici/10/").timeout(6000).get();
-			Elements body = doc.select("div.advert-list");
-			System.out.println(body.select("div.offer-body").size());
-			List<Apartment> apartments = new ArrayList<>();
-			for(Element e : body.select("div.offer-body")) {
-				String title = getProcessed(e.select("a").text());
-				System.out.println(title);
-				String metaInfo = getProcessed(e.select("div.offer-meta-info").text());
-				System.out.println(metaInfo);
-				String location = getProcessed(e.select("p.offer-location").text());
-				System.out.println(location);
-				String price = getProcessed(e.select("p.offer-price").select("span").get(0).text());
-				System.out.println(price);
-				String surfaceArea = getProcessed(e.select("p.offer-price").select("span").get(1).text());
-				System.out.println(surfaceArea);
-				Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
-				apartments.add(apartment);
-			}
-			String location = (String) message.userArgs.get("location");
-			ObjectMapper objectMapper = new ObjectMapper();
+		String option = (String) message.userArgs.get("source");
+		List<Apartment> apartments = new ArrayList<>();
+		switch (option) {
+		case "NEKRETNINE_RS":
 			try {
-				objectMapper.writeValue(new FileOutputStream(location), apartments);
-
+				Document doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/lista/po-stranici/10/").timeout(6000).get();
+				Elements body = doc.select("div.advert-list");
+				System.out.println(body.select("div.offer-body").size());
+				for(Element e : body.select("div.offer-body")) {
+					String title = getProcessed(e.select("a").text());
+					System.out.println(title);
+					String metaInfo = getProcessed(e.select("div.offer-meta-info").text());
+					System.out.println(metaInfo);
+					String location = getProcessed(e.select("p.offer-location").text());
+					System.out.println(location);
+					String price = getProcessed(e.select("p.offer-price").select("span").get(0).text());
+					System.out.println(price);
+					String surfaceArea = getProcessed(e.select("p.offer-price").select("span").get(1).text());
+					System.out.println(surfaceArea);
+					Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
+					apartments.add(apartment);
+				}
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			ACLMessage m = new ACLMessage();
-			m.sender = agentId;
-			m.receivers.add(message.replyTo);
-			m.replyTo = message.sender;
-			m.userArgs.put("location", location);
-			messageManager.post(m);
+			break;
+		case "4_ZIDA":
+			try {
+				Document doc = Jsoup.connect("https://www.4zida.rs/prodaja-stanova").timeout(6000).get();
+				Elements body = doc.select("div.preview-cards-container");
+				System.out.println(body.select("div.meta-container").size());
+				for(Element e : body.select("div.meta-container")) {
+					String title = "";
+					String metaInfo = getProcessed(e.select("p.preview-desc").text());
+					System.out.println(metaInfo);
+					String location = getProcessed(e.select("div.place-names").select("span.ng-star-inserted").text());
+					System.out.println(location);
+					String price = getProcessed(e.select("h3").text());
+					System.out.println(price);
+					String surfaceArea = getProcessed(e.select("span.ng-star-inserted").get(0).text());
+					System.out.println(surfaceArea);
+					Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
+					apartments.add(apartment);
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			break;
+		}
+		String location = (String) message.userArgs.get("location");
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			objectMapper.writeValue(new FileOutputStream(location), apartments);
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		ACLMessage m = new ACLMessage();
+		m.sender = agentId;
+		m.receivers.add(message.replyTo);
+		m.replyTo = message.sender;
+		m.userArgs.put("location", location);
+		messageManager.post(m);
 	}
 
 	private String getProcessed(String str) {
