@@ -2,6 +2,7 @@ package models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Message implements Serializable {
 
@@ -11,13 +12,13 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private User receiver;
 	private User sender;
-	private LocalDateTime dateCreated;
+	private Date dateCreated;
 	private String subject;
 	private String content;
 	
 	public Message() { }
 
-	public Message(User receiver, User sender, LocalDateTime dateCreated, String subject, String content) {
+	public Message(User receiver, User sender, Date dateCreated, String subject, String content) {
 		super();
 		this.receiver = receiver;
 		this.sender = sender;
@@ -42,11 +43,11 @@ public class Message implements Serializable {
 		this.sender = sender;
 	}
 
-	public LocalDateTime getDateCreated() {
+	public Date getDateCreated() {
 		return dateCreated;
 	}
 
-	public void setDateCreated(LocalDateTime dateCreated) {
+	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
 
@@ -68,7 +69,7 @@ public class Message implements Serializable {
 
 	@Override
 	public String toString() {
-		return "" + sender.getUsername() + "," + dateCreated + "," + subject + "," + content;
+		return "" + sender.getUsername() + "," + dateCreated.getTime() + "," + subject + "," + content;
 	}
 	
 }

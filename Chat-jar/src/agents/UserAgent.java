@@ -1,6 +1,7 @@
 package agents;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -73,7 +74,7 @@ public class UserAgent implements Agent {
 		case "MESSAGE":
 			response = "MESSAGE!";
 			Message msg = mapper.convertValue(message.contentObj, Message.class);
-			msg.setDateCreated(LocalDateTime.now());
+			msg.setDateCreated(new Date());
 			messageStorage.addMessage(msg);
 			response += msg.toString();
 			break;

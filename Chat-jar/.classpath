@@ -16,10 +16,7 @@
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jboss-cli-client.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jboss-client.jar"/>
 	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jsoup-1.15.1.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-annotations-2.13.3.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-core-2.13.3.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-databind-2.13.3.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-datatype-jsr353-2.13.3.jar"/>
-	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/javax.json-api-1.1.4.jar"/>
+	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-core-2.5.4.jar"/>
+	<classpathentry kind="lib" path="/Chat-ear/EarContent/lib/jackson-databind-2.5.4.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

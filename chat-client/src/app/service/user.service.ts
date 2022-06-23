@@ -101,14 +101,14 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       data[1].split("|").forEach((message: string) => {
           if (message) {
               let messageData = message.split(",");
-              messages.push(new Message(null, new User(messageData[0], ""), new Date(messageData[1]), messageData[2], messageData[3]));
+              messages.push(new Message(null, new User(messageData[0], ""), new Date(parseInt(messageData[1])), messageData[2], messageData[3]));
           }
       });
       messageService.messages = messages;
     }
     else if(data[0] === "MESSAGE") {
       let messageData = data[1].split(",");
-      messageService.messages.push(new Message(null, new User(messageData[0], ""), new Date(messageData[1]), messageData[2], messageData[3]));
+      messageService.messages.push(new Message(null, new User(messageData[0], ""), new Date(parseInt(messageData[1])), messageData[2], messageData[3]));
       toastr.info("New message from " + messageData[0]);
     }
     else if(data[0] === "RUNNING") {
