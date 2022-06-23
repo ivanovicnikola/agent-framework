@@ -50,9 +50,10 @@ public class MDBConsumer implements MessageListener {
 					acl.receivers = new ArrayList<>();
 					acl.receivers.add(receiver);
 					forwardMessage(acl);
+				} else {
+					Agent agent = cachedAgents.getByAID(receiver);
+					agent.handleMessage(aclMessage);
 				}
-				Agent agent = cachedAgents.getByAID(receiver);
-				agent.handleMessage(aclMessage);
 			}
 		} catch (JMSException e) {
 			e.printStackTrace();
