@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import chatmanager.ChatManagerRemote;
@@ -48,6 +49,7 @@ public class UserAgent implements Agent {
 	
 	@Override
 	public void handleMessage(ACLMessage message) {
+		ObjectMapper mapper = new ObjectMapper();
 		String option = "";
 		String response = "";
 		option = (String) message.userArgs.get("command");
@@ -70,15 +72,14 @@ public class UserAgent implements Agent {
 			break;
 		case "MESSAGE":
 			response = "MESSAGE!";
-			ObjectMapper mapper = new ObjectMapper();
-			models.Message msg = mapper.convertValue(message.contentObj, models.Message.class);
+			Message msg = mapper.convertValue(message.contentObj, Message.class);
 			msg.setDateCreated(LocalDateTime.now());
 			messageStorage.addMessage(msg);
 			response += msg.toString();
 			break;
 		case "GET_MESSAGES":
 			response = "MESSAGES!";
-			for(models.Message m : messageStorage.getAll()) {
+			for(Message m : messageStorage.getAll()) {
 				response += m.toString() + "|";
 			}
 			break;
@@ -102,7 +103,9 @@ public class UserAgent implements Agent {
 			break;
 		case "GET_APARTMENTS":
 			response = "APARTMENTS!";
-			List<Apartment> apartments = (List<Apartment>) message.contentObj;
+			List<Apartment> apartments = mapper.convertValue(
+				message.contentObj,
+				new TypeReference<List<Apartment>>() { });
 			for(Apartment apartment : apartments) {
 				response += apartment.toString() + "|";
 			}
