@@ -30,15 +30,16 @@ public class ApartmentsRestBean implements ApartmentsRest {
 	@Override
 	public void getApartments(String username) {
 		User user = chatManager.getByUsername(username);
-		AID collectorId = new AID(user.getUsername(), new AgentType("CollectorAgent", user.getHost()));
+		AID collectorId = new AID("collectorAgent", new AgentType("CollectorAgent", user.getHost()));
 		agentManager.startAgent(collectorId);
-		AID searchId = new AID(user.getUsername(), new AgentType("SearchAgent", user.getHost()));
+		AID searchId = new AID("searchAgent", new AgentType("SearchAgent", user.getHost()));
 		agentManager.startAgent(searchId);
-		AID masterId = new AID(user.getUsername(), new AgentType("MasterAgent", user.getHost()));
-		agentManager.startAgent(masterId);
+		//AID masterId = new AID(user.getUsername(), new AgentType("MasterAgent", user.getHost()));
+		//agentManager.startAgent(masterId);
+		AID userId = new AID(user.getUsername(), new AgentType("UserAgent", user.getHost()));
 		
 		ACLMessage m = new ACLMessage();
-		m.sender = masterId;
+		m.sender = userId;
 		m.receivers.add(collectorId);
 		m.replyTo = searchId;
 		m.userArgs.put("location", location);
@@ -46,7 +47,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		messageManager.post(m);
 		
 		ACLMessage m2 = new ACLMessage();
-		m2.sender = masterId;
+		m2.sender = userId;
 		m2.receivers.add(collectorId);
 		m2.replyTo = searchId;
 		m2.userArgs.put("location", location);

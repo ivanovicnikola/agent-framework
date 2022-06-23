@@ -12,6 +12,7 @@ import chatmanager.ChatManagerRemote;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import messagestorage.MessageStorageRemote;
+import models.Apartment;
 import models.Message;
 import models.User;
 import ws.WSChat;
@@ -94,6 +95,13 @@ public class UserAgent implements Agent {
 			response = "PERFORMATIVES!";
 			for(String performative : messageManager.getPerformatives()) {
 				response += performative + "|";
+			}
+			break;
+		case "GET_APARTMENTS":
+			response = "APARTMENTS!";
+			List<Apartment> apartments = (List<Apartment>) message.contentObj;
+			for(Apartment apartment : apartments) {
+				response += apartment.toString() + "|";
 			}
 			break;
 		default:

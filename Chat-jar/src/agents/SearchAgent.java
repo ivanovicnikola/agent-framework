@@ -63,6 +63,7 @@ public class SearchAgent implements Agent {
 		m.sender = agentId;
 		m.receivers.add(message.replyTo);
 		m.contentObj = apartments;
+		m.userArgs.put("command", "GET_APARTMENTS");
 		messageManager.post(m);
 	}
 
