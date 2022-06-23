@@ -36,6 +36,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		agentManager.startAgent(searchId);
 		AID masterId = new AID(user.getUsername(), new AgentType("MasterAgent", user.getHost()));
 		agentManager.startAgent(masterId);
+		
 		ACLMessage m = new ACLMessage();
 		m.sender = masterId;
 		m.receivers.add(collectorId);
@@ -43,6 +44,14 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		m.userArgs.put("location", location);
 		m.userArgs.put("source", "4_ZIDA");
 		messageManager.post(m);
+		
+		ACLMessage m2 = new ACLMessage();
+		m2.sender = masterId;
+		m2.receivers.add(collectorId);
+		m2.replyTo = searchId;
+		m2.userArgs.put("location", location);
+		m2.userArgs.put("source", "NEKRETNINE_RS");
+		messageManager.post(m2);
 	}
 
 }

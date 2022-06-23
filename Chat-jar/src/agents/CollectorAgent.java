@@ -53,7 +53,7 @@ public class CollectorAgent implements Agent {
 				for(Element e : body.select("div.offer-body")) {
 					String title = getProcessed(e.select("a").text());
 					System.out.println(title);
-					String metaInfo = getProcessed(e.select("div.offer-meta-info").text());
+					String metaInfo = getProcessed(e.select("div.offer-meta-info").text().replace(" | ", ", "));
 					System.out.println(metaInfo);
 					String location = getProcessed(e.select("p.offer-location").text());
 					System.out.println(location);
@@ -77,13 +77,14 @@ public class CollectorAgent implements Agent {
 				for(Element e : body.select("div.meta-container")) {
 					String title = getProcessed(e.select("p.preview-desc").text());
 					System.out.println(title);
-					String metaInfo = getProcessed(e.select("span.ng-star-inserted").get(1).text() + " " + e.select("span.ng-star-inserted").get(2).text() + " " + e.select("span.ng-star-inserted").get(3).text());
+					Elements metaLabels = e.select("div.meta-labels").select("span.ng-star-inserted");
+					String metaInfo = getProcessed(metaLabels.get(1).text() + ", " + metaLabels.get(2).text());
 					System.out.println(metaInfo);
 					String location = getProcessed(e.select("div.place-names").select("span.ng-star-inserted").text());
 					System.out.println(location);
 					String price = getProcessed(e.select("h3").text());
 					System.out.println(price);
-					String surfaceArea = getProcessed(e.select("span.ng-star-inserted").get(0).text());
+					String surfaceArea = getProcessed(metaLabels.get(0).text());
 					System.out.println(surfaceArea);
 					Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
 					apartments.add(apartment);
