@@ -3,8 +3,6 @@ package models;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 public class Message implements Serializable {
 
 	/**
@@ -13,7 +11,6 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private User receiver;
 	private User sender;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDateTime dateCreated;
 	private String subject;
 	private String content;
