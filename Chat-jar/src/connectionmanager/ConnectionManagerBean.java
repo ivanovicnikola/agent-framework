@@ -291,5 +291,10 @@ public class ConnectionManagerBean implements ConnectionManager {
 		agentTypes.setAgentTypes(types);
 		notifyUserAgents("GET_CLASSES");
 	}
+
+	@Override
+	public List<String> getConnections() {
+		return connections;
+	}
 	
 }

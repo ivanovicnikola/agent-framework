@@ -37,10 +37,10 @@ public interface ConnectionManager {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String pingNode();
 	
-	@POST
+	/*@POST
 	@Path("/notify/loggedIn")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)*/
 	public void notifyAllLoggedIn();
 
 	@POST
@@ -49,10 +49,10 @@ public interface ConnectionManager {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void setLoggedInRemote(List<User> users);
 	
-	@POST
+	/*@POST
 	@Path("/notify/registered")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)*/
 	public void notifyAllRegistered();
 
 	@POST
@@ -67,10 +67,10 @@ public interface ConnectionManager {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void setRunningRemote(List<AID> agentIds);
 	
-	@POST
+	/*@POST
 	@Path("/notify/running")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)*/
 	public void notifyAllRunning();
 	
 	@GET
@@ -82,4 +82,6 @@ public interface ConnectionManager {
 	@Path("/agents/classes")
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void postClasses(List<AgentType> types);
+	
+	public List<String> getConnections();
 }
