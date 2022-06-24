@@ -15,6 +15,7 @@ import agents.AID;
 import agents.AgentType;
 import chatmanager.ChatManagerRemote;
 import connectionmanager.ConnectionManager;
+import dto.ApartmentScrapingDto;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
@@ -48,20 +49,23 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		for(int i = 0; i < sources.length; i++) {
 			String host = connections.get(i % connections.size());
 			String source = sources[i];
+			ApartmentScrapingDto dto = new ApartmentScrapingDto(userId, source);
 			if(host.equals(AgentCenter.getNodeAlias())) {
-				scrapeApartments(userId, source);
+				scrapeApartments(dto);
 			} else {
 				ResteasyClient resteasyClient = new ResteasyClientBuilder().build();
 				ResteasyWebTarget rtarget = resteasyClient.target("http://" + host + "/Chat-war/api/apartments");
 				ApartmentsRest rest = rtarget.proxy(ApartmentsRest.class);
-				rest.scrapeApartments(userId, source);
+				rest.scrapeApartments(dto);
 				resteasyClient.close();
 			}
 		}
 	}
 	
 	@Override
-	public void scrapeApartments(AID userId, String source) {
+	public void scrapeApartments(ApartmentScrapingDto dto) {
+		AID userId = dto.agentId;
+		String source = dto.source;
 		AID collectorId = new AID("collectorAgent", new AgentType("CollectorAgent", AgentCenter.getHost()));
 		agentManager.startAgent(collectorId);
 		AID searchId = new AID("searchAgent", new AgentType("SearchAgent", AgentCenter.getHost()));

@@ -8,6 +8,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
 
 import agents.AID;
+import dto.ApartmentScrapingDto;
 
 @Remote
 public interface ApartmentsRest {
@@ -17,5 +18,5 @@ public interface ApartmentsRest {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void scrapeApartments(AID userId, String source);
+	public void scrapeApartments(ApartmentScrapingDto dto);
 }
