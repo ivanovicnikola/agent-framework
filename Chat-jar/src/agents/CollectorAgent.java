@@ -57,9 +57,11 @@ public class CollectorAgent implements Agent {
 					System.out.println(metaInfo);
 					String location = getProcessed(e.select("p.offer-location").text());
 					System.out.println(location);
-					String price = getProcessed(e.select("p.offer-price").select("span").get(0).text());
+					String priceStr = getProcessed(e.select("p.offer-price").select("span").get(0).text());
+					Double price = parseDouble(priceStr);
 					System.out.println(price);
-					String surfaceArea = getProcessed(e.select("p.offer-price").select("span").get(1).text());
+					String surfaceAreaStr = getProcessed(e.select("p.offer-price").select("span").get(1).text());
+					Double surfaceArea = parseDouble(surfaceAreaStr);
 					System.out.println(surfaceArea);
 					Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
 					apartments.add(apartment);
@@ -82,9 +84,11 @@ public class CollectorAgent implements Agent {
 					System.out.println(metaInfo);
 					String location = getProcessed(e.select("div.place-names").select("span.ng-star-inserted").text());
 					System.out.println(location);
-					String price = getProcessed(e.select("h3").text());
+					String priceStr = getProcessed(e.select("h3").text());
+					Double price = parseDouble(priceStr);
 					System.out.println(price);
-					String surfaceArea = getProcessed(metaLabels.get(0).text());
+					String surfaceAreaStr = getProcessed(metaLabels.get(0).text());
+					Double surfaceArea = parseDouble(surfaceAreaStr);
 					System.out.println(surfaceArea);
 					Apartment apartment = new Apartment(title, metaInfo, location, price, surfaceArea);
 					apartments.add(apartment);
@@ -111,6 +115,16 @@ public class CollectorAgent implements Agent {
 		messageManager.post(m);
 	}
 
+	private Double parseDouble(String str) {
+		Double d;
+		try {
+			d = Double.parseDouble(str.replaceAll("[^\\d]", ""));
+		} catch (NumberFormatException e) {
+			d = null;
+		}
+		return d;
+	}
+	
 	private String getProcessed(String str) {
 		return str.replace("!", "").replace("|", "").replace(";", "");
 	}

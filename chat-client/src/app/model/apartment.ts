@@ -3,7 +3,7 @@ export class Apartment {
         public title: string,
         public metaInfo: string,
         public location: string,
-        public price: string,
-        public surfaceArea: string
+        public price: number,
+        public surfaceArea: number
     ) {}
 }

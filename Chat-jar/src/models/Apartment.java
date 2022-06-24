@@ -11,12 +11,12 @@ public class Apartment implements Serializable {
 	private String title;
 	private String metaInfo;
 	private String location;
-	private String price;
-	private String surfaceArea;
+	private Double price;
+	private Double surfaceArea;
 	
 	public Apartment() {}
 
-	public Apartment(String title, String metaInfo, String location, String price, String surfaceArea) {
+	public Apartment(String title, String metaInfo, String location, Double price, Double surfaceArea) {
 		super();
 		this.title = title;
 		this.metaInfo = metaInfo;
@@ -49,19 +49,19 @@ public class Apartment implements Serializable {
 		this.location = location;
 	}
 
-	public String getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public String getSurfaceArea() {
+	public Double getSurfaceArea() {
 		return surfaceArea;
 	}
 
-	public void setSurfaceArea(String surfaceArea) {
+	public void setSurfaceArea(Double surfaceArea) {
 		this.surfaceArea = surfaceArea;
 	}
 

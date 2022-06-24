@@ -144,7 +144,7 @@ function initSocket(userService: UserService, router: Router, toastr: ToastrServ
       data[1].split("|").forEach((apartment: string) => {
         if (apartment) {
           let apartmentData = apartment.split(";");
-          apartmentService.apartments.push(new Apartment(apartmentData[0], apartmentData[1], apartmentData[2], apartmentData[3], apartmentData[4]));
+          apartmentService.apartments.push(new Apartment(apartmentData[0], apartmentData[1], apartmentData[2], parseFloat(apartmentData[3]), parseFloat(apartmentData[4])));
         }
       });
     }
