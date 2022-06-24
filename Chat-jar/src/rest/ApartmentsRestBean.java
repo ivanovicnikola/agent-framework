@@ -1,6 +1,10 @@
 package rest;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -21,6 +25,7 @@ import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
 import util.AgentCenter;
+import util.FileUtils;
 
 @Stateless
 @Path("/apartments")
@@ -38,8 +43,26 @@ public class ApartmentsRestBean implements ApartmentsRest {
 	@EJB
 	private ConnectionManager connectionManager;
 	
-	private String location = "C:\\Users\\nikol\\Desktop\\Nikola\\Data\\apartments.json";
+	private String location;
 	private String[] sources = {"NEKRETNINE_RS", "4_ZIDA"};
+	
+	public ApartmentsRestBean() {
+		location = getLocation();
+	}
+	
+	private String getLocation() {
+		try {
+			File f = FileUtils.getFile(ApartmentsRest.class, "", "apartments.properties");
+			FileInputStream fileInput = new FileInputStream(f);
+			Properties properties = new Properties();
+			properties.load(fileInput);
+			fileInput.close();
+			return properties.getProperty("path");
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	@Override
 	public void searchApartments(String username, ApartmentSearch search) {
