@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Sort } from '@angular/material/sort';
+import { ApartmentSearch } from '../model/apartment-search';
 import { ApartmentService } from '../service/apartment.service';
 
 @Component({
@@ -9,10 +10,15 @@ import { ApartmentService } from '../service/apartment.service';
 })
 export class ApartmentsComponent implements OnInit {
 
+  search: ApartmentSearch = new ApartmentSearch('', null, null, null, null);
   constructor(public apartmentService: ApartmentService) { }
 
   ngOnInit(): void {
-    this.apartmentService.getApartments();
+    this.searchApartments();
+  }
+  
+  searchApartments() {
+    this.apartmentService.searchApartments(this.search);
   }
 
   sortData(sort: Sort) {

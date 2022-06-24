@@ -16,6 +16,7 @@ import agents.AgentType;
 import chatmanager.ChatManagerRemote;
 import connectionmanager.ConnectionManager;
 import dto.ApartmentScrapingDto;
+import dto.ApartmentSearch;
 import messagemanager.ACLMessage;
 import messagemanager.MessageManagerRemote;
 import models.User;
@@ -41,7 +42,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 	private String[] sources = {"NEKRETNINE_RS", "4_ZIDA"};
 	
 	@Override
-	public void getApartments(String username) {
+	public void searchApartments(String username, ApartmentSearch search) {
 		User user = chatManager.getByUsername(username);
 		AID userId = new AID(user.getUsername(), new AgentType("UserAgent", user.getHost()));
 		List<String> connections = connectionManager.getConnections();
@@ -49,7 +50,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		for(int i = 0; i < sources.length; i++) {
 			String host = connections.get(i % connections.size());
 			String source = sources[i];
-			ApartmentScrapingDto dto = new ApartmentScrapingDto(userId, source);
+			ApartmentScrapingDto dto = new ApartmentScrapingDto(userId, source, search);
 			if(host.equals(AgentCenter.getNodeAlias())) {
 				scrapeApartments(dto);
 			} else {
@@ -66,6 +67,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 	public void scrapeApartments(ApartmentScrapingDto dto) {
 		AID userId = dto.agentId;
 		String source = dto.source;
+		ApartmentSearch search = dto.search;
 		AID collectorId = new AID("collectorAgent", new AgentType("CollectorAgent", AgentCenter.getHost()));
 		agentManager.startAgent(collectorId);
 		AID searchId = new AID("searchAgent", new AgentType("SearchAgent", AgentCenter.getHost()));
@@ -76,6 +78,7 @@ public class ApartmentsRestBean implements ApartmentsRest {
 		m.replyTo = searchId;
 		m.userArgs.put("location", location);
 		m.userArgs.put("source", source);
+		m.contentObj = search;
 		messageManager.post(m);
 	}
 

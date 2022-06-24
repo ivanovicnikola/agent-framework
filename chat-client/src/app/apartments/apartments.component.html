@@ -1,7 +1,33 @@
 <div class="container-fluid">
+    
     <div class="row justify-content-center">
         <div class="col-md-4">
             <h1 style="text-align: center;">Apartments</h1>
+            <form (ngSubmit)="searchApartments()" #searchForm="ngForm">
+                <div class="form-group mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" required placeholder="Location" [(ngModel)]="search.location" name="location" #location="ngModel">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="minPrice" class="form-label">Min price</label>
+                    <input type="number" class="form-control" id="minPrice" required placeholder="Min price" [(ngModel)]="search.minPrice" name="minPrice" #minPrice="ngModel">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="maxPrice" class="form-label">Max price</label>
+                    <input type="number" class="form-control" id="maxPrice" required placeholder="Max price" [(ngModel)] ="search.maxPrice" name="maxPrice" #maxPrice="ngModel">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="minArea" class="form-label">Min area</label>
+                    <input type="number" class="form-control" id="minArea" required placeholder="Min area" [(ngModel)]="search.minArea" name="minArea" #minArea="ngModel">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="maxArea" class="form-label">Max area</label>
+                    <input type="number" class="form-control" id="maxArea" required placeholder="Max area" [(ngModel)] ="search.maxArea" name="maxArea" #maxArea="ngModel">
+                </div>
+                <div class="d-grid col-6 mx-auto">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
             <table matSort (matSortChange)="sortData($event)" class="table">
                 <thead>
                     <tr>

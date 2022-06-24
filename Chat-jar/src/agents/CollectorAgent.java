@@ -112,6 +112,7 @@ public class CollectorAgent implements Agent {
 		m.receivers.add(message.replyTo);
 		m.replyTo = message.sender;
 		m.userArgs.put("location", location);
+		m.contentObj = message.contentObj;
 		messageManager.post(m);
 	}
 
