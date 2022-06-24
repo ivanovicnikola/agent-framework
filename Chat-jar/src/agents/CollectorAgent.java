@@ -47,7 +47,7 @@ public class CollectorAgent implements Agent {
 		switch (option) {
 		case "NEKRETNINE_RS":
 			try {
-				Document doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/lista/po-stranici/10/").timeout(6000).get();
+				Document doc = Jsoup.connect("https://www.nekretnine.rs/stambeni-objekti/stanovi/izdavanje-prodaja/prodaja/lista/po-stranici/10/").timeout(6000).get();
 				Elements body = doc.select("div.advert-list");
 				System.out.println(body.select("div.offer-body").size());
 				for(Element e : body.select("div.offer-body")) {
