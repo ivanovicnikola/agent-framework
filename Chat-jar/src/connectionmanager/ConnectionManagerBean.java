@@ -185,8 +185,8 @@ public class ConnectionManagerBean implements ConnectionManager {
 				@Override
 				public void run() {
 					if(!nodeResponded(c)) {
-						System.out.println("Node: " + c + " not responding");
-						connections.remove(c);
+						System.out.println("Deleting node: " + c);
+						deleteNode(c);
 						notifyAllDelete(c);
 					}
 				}
@@ -206,7 +206,7 @@ public class ConnectionManagerBean implements ConnectionManager {
 					return true;
 				}
 			} catch(Exception e) {
-				e.printStackTrace();
+				System.out.println("Node: " + alias + " not responding");
 			}
 		}
 		return false;
